@@ -80,10 +80,13 @@ const footer_info_span = document.querySelector("#footer-data");
 const element_viewer = document.querySelector("#element-viewer");
 
 let product_list = [];
+let stock_list = [];
 let tag_list = [];
 let condition_list = [];
 let address_list = [];
 let owner_list = [];
+let client_list = [];
+let company_data = {};
 
 let prevFocusedElement = null;
 
@@ -125,7 +128,7 @@ function closeViewer() {
 	element_viewer.dataset.opened = "false";
 	element_viewer.setAttribute('aria-hidden', 'true');
 	element_viewer.innerHTML = "";
-	document.body.classList.remove('viewer-ouvert');
+	document.body.classList.remove('viewer-opened');
 	document.querySelector('main').removeAttribute('aria-hidden');
 	document.querySelector('header').removeAttribute('aria-hidden');
 	document.querySelector('footer').removeAttribute('aria-hidden');
@@ -237,7 +240,13 @@ async function refreshData() {
 		product_list = product_list_fetch.data;
 	} else {
 		product_list = [];
-		showApiError("Impossible de charger les produits. Veuillez réessayer.");
+	}
+
+	const stock_list_fetch = await (new HTTPRequest("/api/v1/stock/")).get();
+	if (stock_list_fetch.status === 200) {
+		stock_list = stock_list_fetch.data;
+	} else {
+		stock_list = [];
 	}
 
 	const tag_list_fetch = await (new HTTPRequest("/api/v1/tag/")).get();
@@ -268,8 +277,21 @@ async function refreshData() {
 		owner_list = [];
 	}
 
+	const client_list_fetch = await (new HTTPRequest("/api/v1/client/")).get();
+	if (client_list_fetch.status === 200) {
+		client_list = client_list_fetch.data;
+	} else {
+		client_list = [];
+	}
+
+	const company_data_fetch = await (new HTTPRequest("/api/v1/company/")).get();
+	if (company_data_fetch.status === 200) {
+		company_data = company_data_fetch.data;
+	} else {
+		company_data = [];
+	}
+
 	updateFooterData();
-	updateSelectTagsData();
 }
 
 function updateFooterData() {
@@ -285,6 +307,8 @@ function updateFooterData() {
 	}
 	const text = `Références : ${ref_count} | Stocks : ${stock_count} | Valeur inventaire : ${total_price.toFixed(2)}€ |`;
 	footer_info_span.innerText = text;
+	const footer_company_name = document.querySelector("#footer-company-name");
+	footer_company_name.innerText=company_data.name;
 }
 
 function updateSelectTagsData() {
@@ -322,7 +346,7 @@ function displayElementViewer(mode = "item", data = {}) {
 	if (loaded) {
 		element_viewer.dataset.opened = "true";
 		element_viewer.setAttribute('aria-hidden', 'false');
-		document.body.classList.add('viewer-ouvert');
+		document.body.classList.add('viewer-opened');
 		document.querySelector('main').setAttribute('aria-hidden', 'true');
 		document.querySelector('header').setAttribute('aria-hidden', 'true');
 		document.querySelector('footer').setAttribute('aria-hidden', 'true');

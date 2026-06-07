@@ -55,7 +55,9 @@
 						<label class="sr-only" for="menu-search-input-search">Rechercher un produit</label>
 						<input type="search" id="menu-search-input-search" class="item-list-input" aria-labelledby="search-heading">
 						<label for="menu-search-select-tags">Étiquette :</label>
-						<select id="menu-search-select-tags" class="item-list-input"></select>
+						<select id="menu-search-select-tags" class="item-list-input">
+							<option value="none" selected disabled>Étiquette</option>
+						</select>
 					</div>
 				</div>
 				<div>
@@ -67,7 +69,7 @@
 		</section>
 	</main>
 	<footer>
-		<p>| Psychedelic Madness | <span id="footer-data"></span></p>
+		<p>| <span id="footer-company-name"></span> | <span id="footer-data"></span></p>
 	</footer>
 	<script src="/stock/main.js"></script>
 </body>

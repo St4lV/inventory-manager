@@ -85,6 +85,46 @@ let tag_list = [];
 let condition_list = [];
 let address_list = [];
 let owner_list = [];
+let client_list = [];
+let company_data = {};
+
+function displayElementViewer(mode = "item", data = {}) {
+	prevFocusedElement = document.activeElement;
+	let dom = '';
+	let loaded = false;
+
+	switch (mode) {
+		case "item":
+			itemMode(data.reference);
+			break;
+		case "new-item":
+			newItemMode();
+			break;
+		case "edit-item":
+			editItemMode(data.reference);
+			break;
+		case "new-stock":
+			newStockMode(data.reference);
+			break;
+		case "edit-stock":
+			editStockMode(data.reference, data.stock)
+			break;
+	}
+
+	if (loaded) {
+		element_viewer.dataset.opened = "true";
+		element_viewer.setAttribute('aria-hidden', 'false');
+		document.body.classList.add('viewer-opened');
+		document.querySelector('main').setAttribute('aria-hidden', 'true');
+		document.querySelector('header').setAttribute('aria-hidden', 'true');
+		document.querySelector('footer').setAttribute('aria-hidden', 'true');
+		const content = document.getElementById('element-viewer-content');
+		if (content) {
+			content.focus();
+			trapFocus(content);
+		}
+	}
+}
 
 async function bindActions() {
 
@@ -133,6 +173,20 @@ async function refreshData() {
 		owner_list = [];
 	}
 
+	const client_list_fetch = await (new HTTPRequest("/api/v1/client/")).get();
+	if (client_list_fetch.status === 200) {
+		client_list = client_list_fetch.data;
+	} else {
+		client_list = [];
+	}
+
+	const company_data_fetch = await (new HTTPRequest("/api/v1/company/")).get();
+	if (company_data_fetch.status === 200) {
+		company_data = company_data_fetch.data;
+	} else {
+		company_data = [];
+	}
+
 	updateFooterData();
 }
 
@@ -149,6 +203,8 @@ function updateFooterData() {
 	}
 	const text = `Références : ${ref_count} | Stocks : ${stock_count} | Valeur inventaire : ${total_price.toFixed(2)}€ |`;
 	footer_info_span.innerText = text;
+	const footer_company_name = document.querySelector("#footer-company-name");
+	footer_company_name.innerText=company_data.name;
 }
 
 async function displayElements() {
@@ -160,21 +216,33 @@ async function displayElements() {
 	displayTags();
 
 	function displayCompanyInfo() {
-		/*let dom = "";
-		const list_el = document.querySelector("#location-list");
-		for (let i of location_list){
-			dom+=`<li><h3>${i.label}</h3><p>${i.address}</p><hr></li>`
-		}
-		list_el.innerHTML=dom;*/
+		const c_name = document.querySelector("#app-settings-company-name");
+		const c_address = document.querySelector("#app-settings-company-address");
+		const c_email = document.querySelector("#app-settings-company-email");
+		const c_tel = document.querySelector("#app-settings-company-tel");
+		const c_siren = document.querySelector("#app-settings-company-siren");
+
+		c_name.innerText= company_data.name;
+		c_address.innerText= company_data.address;
+		c_email.innerText= company_data.email;
+		c_tel.innerText= company_data.tel;
+		c_siren.innerText= company_data.siren;
 	}
 
 	function displayClients() {
-		/*let dom = "";
-		const list_el = document.querySelector("#location-list");
-		for (let i of location_list){
-			dom+=`<li><h3>${i.label}</h3><p>${i.address}</p><hr></li>`
+		let dom = "";
+		const list_el = document.querySelector("#client-list");
+		for (let i of client_list){
+			dom+=`<li>
+					<h3>${i.name}</h3>
+					<p>${i.address}</p>
+					<p>${i.tel}</p>
+					<p>${i.email}</p>
+					<p>${i.siren}</p>
+					<hr>
+				</li>`
 		}
-		list_el.innerHTML=dom;*/
+		list_el.innerHTML=dom;
 	}
 
 	function displayOwners() {

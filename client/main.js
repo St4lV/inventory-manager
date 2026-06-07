@@ -85,6 +85,8 @@ let tag_list = [];
 let condition_list = [];
 let address_list = [];
 let owner_list = [];
+let client_list = [];
+let company_data = {};
 
 async function bindActions() {
 
@@ -133,6 +135,20 @@ async function refreshData() {
 		owner_list = [];
 	}
 
+	const client_list_fetch = await (new HTTPRequest("/api/v1/client/")).get();
+	if (client_list_fetch.status === 200) {
+		client_list = client_list_fetch.data;
+	} else {
+		client_list = [];
+	}
+
+	const company_data_fetch = await (new HTTPRequest("/api/v1/company/")).get();
+	if (company_data_fetch.status === 200) {
+		company_data = company_data_fetch.data;
+	} else {
+		company_data = [];
+	}
+
 	updateFooterData();
 }
 
@@ -149,6 +165,8 @@ function updateFooterData() {
 	}
 	const text = `Références : ${ref_count} | Stocks : ${stock_count} | Valeur inventaire : ${total_price.toFixed(2)}€ |`;
 	footer_info_span.innerText = text;
+	const footer_company_name = document.querySelector("#footer-company-name");
+	footer_company_name.innerText=company_data.name;
 }
 
 function objectPathResolver(obj, path) {
