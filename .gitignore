@@ -1,6 +1,9 @@
 .env*
 !.env.example
 node_modules/
+
 client/test_api/
 client/template.html
 client/assets/logo_couleur.svg
+
+postgres-init.sql

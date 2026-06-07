@@ -13,6 +13,7 @@ case "$1" in
         docker compose down
         docker container prune -f
         docker system prune -f
+		mv .env.bak .env
         docker build -t inventory-manager . # --no-cache
         echo "Updated successfully"
         ./inventory-manager.sh start
