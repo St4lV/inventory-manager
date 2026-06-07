@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
 router.put("/", async (req, res) => {
 	const { name, email, tel, siren, address, new_name, new_email, new_tel, new_siren, new_address} = req.body;
 	const location = new Client( name, address, tel, email, siren)
-	const result = await location.modify( new_name, new_email, new_tel, new_siren, new_address);
+	const result = await location.modify( new_name, new_address, new_tel, new_email, new_siren);
 	return res.status(result.code).json(result);
 })
 

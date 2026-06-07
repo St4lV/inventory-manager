@@ -72,7 +72,7 @@ class Client {
 		}
 
 		const _SQLquery = async () => {
-			const query = "UPDATE inventory.client SET name = $2, email = $3, tel = $4, siren = $5 WHERE id = $1;";
+			const query = "UPDATE inventory.client SET name = $2, email = $3, tel = $4, siren = $5, address = $6 WHERE id = $1;";
 			try {
 				const result = await pool.query(query, [this.id, new_name, new_email, new_tel, new_siren, new_address]);
 				return { code: 200, data: "OK" };
@@ -83,7 +83,7 @@ class Client {
 
 		const client = await _SQLquery();
 		if (client.code !== 200) {
-			log.error(client);
+			log.error(client.data);
 			return { code: 500, data: "Internal server error" };
 		}
 		return client;
