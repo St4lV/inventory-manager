@@ -1,0 +1,10 @@
+services:
+  app:
+    image: "inventory-manager"
+    container_name: "inventory-manager-app"
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - /var/inventory-manager-main/downloaded:/app/node/downloaded
+    restart: unless-stopped
