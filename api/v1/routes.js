@@ -19,4 +19,10 @@ router.use("/stock",stock_endpoint);
 const tag_endpoint = require("./tag/endpoint")
 router.use("/tag", tag_endpoint);
 
+const company_endpoint = require("./company/endpoint")
+router.use("/company", company_endpoint);
+
+const client_endpoint = require("./client/endpoint")
+router.use("/client", client_endpoint);
+
 module.exports = router;

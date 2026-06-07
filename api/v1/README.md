@@ -4,6 +4,87 @@ URL de base : `/api/v1/`
 
 ---
 
+## Company Data
+
+### GET `/api/v1/company/`
+Récupère les informations de l'entreprise.
+
+**Paramètres** : aucun
+
+> Entrée unique. Retourne le nom, l'adresse, l'adresse courriel, le téléphone et le SIREN.
+
+---
+
+### PUT `/api/v1/company/`
+Modifie les informations de l'entreprise.
+
+**Corps (JSON) :**
+| Champ | Type | Description |
+|---|---|---|
+| `new_name` | string | Nouveau nom |
+| `new_address` | string | Nouvelle adresse |
+| `new_email` | string | Nouvelle adresse courriel |
+| `new_tel` | string | Nouveau téléphone |
+| `new_siren` | string | Nouveau SIREN |
+
+---
+
+## Client
+
+### GET `/api/v1/client/`
+Récupère tous les clients.
+
+**Paramètres** : aucun
+
+---
+
+### POST `/api/v1/client/`
+Crée un nouveau client.
+
+**Corps (JSON) :**
+| Champ | Type | Description |
+|---|---|---|
+| `name` | string | Nom du client |
+| `address` | string | Adresse |
+| `tel` | string | Téléphone |
+| `email` | string | Adresse courriel |
+| `siren` | string | SIREN |
+
+---
+
+### PUT `/api/v1/client/`
+Modifie un client existant.
+
+**Corps (JSON) :**
+| Champ | Type | Description |
+|---|---|---|
+| `name` | string | Nom actuel |
+| `address` | string | Adresse actuelle |
+| `tel` | string | Téléphone actuel |
+| `email` | string | Adresse courriel actuelle |
+| `siren` | string | SIREN actuel |
+| `new_name` | string | Nouveau nom |
+| `new_address` | string | Nouvelle adresse |
+| `new_tel` | string | Nouveau téléphone |
+| `new_email` | string | Nouvelle adresse courriel |
+| `new_siren` | string | Nouveau SIREN |
+
+---
+
+### DELETE `/api/v1/client/`
+Supprime un client.
+
+**Corps (JSON) :**
+| Champ | Type | Description |
+|---|---|---|
+| `name` | string | Nom du client |
+| `address` | string | Adresse |
+| `tel` | string | Téléphone |
+| `email` | string | Adresse courriel |
+| `siren` | string | SIREN |
+
+---
+
 ## Condition
 
 ### GET `/api/v1/condition/`
