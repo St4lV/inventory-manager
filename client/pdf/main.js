@@ -76,7 +76,6 @@ const svg = {
 
 const menu_search_select_tags = document.querySelector("#menu-search-select-tags");
 const product_input_search = document.getElementById("menu-search-input-search");
-const footer_info_span = document.querySelector("#footer-data");
 const element_viewer = document.querySelector("#element-viewer");
 
 let product_list = [];
@@ -148,25 +147,6 @@ async function refreshData() {
 	} else {
 		company_data = [];
 	}
-
-	updateFooterData();
-}
-
-function updateFooterData() {
-	let ref_count = 0;
-	let stock_count = 0;
-	let total_price = 0;
-	for (let i of product_list) {
-		for (let j of i.stock) {
-			total_price += j.purchase_price * j.count;
-			stock_count += j.count;
-		}
-		ref_count += 1;
-	}
-	const text = `Références : ${ref_count} | Stocks : ${stock_count} | Valeur inventaire : ${total_price.toFixed(2)}€ |`;
-	footer_info_span.innerText = text;
-	const footer_company_name = document.querySelector("#footer-company-name");
-	footer_company_name.innerText=company_data.name;
 }
 
 async function displayElements() {

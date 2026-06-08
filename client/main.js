@@ -66,8 +66,6 @@ class HTTPRequest {
 	static delete(url) { return new HTTPRequest(url).delete(); }
 }
 
-const footer_info_span = document.querySelector("#footer-data");
-
 let product_list = [];
 let stock_list = [];
 let tag_list = [];
@@ -121,26 +119,6 @@ async function refreshData() {
 	owner_list = window.owner_list;
 	client_list = window.client_list;
 	company_data = window.company_data;
-
-	updateFooterData();
-}
-
-/* ===========================
-   Pied de page
-   =========================== */
-function updateFooterData() {
-	let ref_count = 0;
-	let stock_count = 0;
-	let total_price = 0;
-	for (let i of product_list) {
-		for (let j of i.stock) {
-			total_price += j.purchase_price * j.count;
-			stock_count += j.count;
-		}
-		ref_count += 1;
-	}
-	footer_info_span.innerText = `Références : ${ref_count} | Stocks : ${stock_count} | Valeur inventaire : ${total_price.toFixed(2)}€ |`;
-	document.querySelector("#footer-company-name").innerText = company_data.name || '';
 }
 
 /* ===========================

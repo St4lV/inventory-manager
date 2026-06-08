@@ -187,7 +187,6 @@ async function generateProductList(searched = "") {
 	let dom = "";
 
 	for (let i of product_list) {
-		console.log(selected_tag)
 		if ((searched === "" || universalize(i.label).includes(universalize(searched)) || universalize(i.reference).includes(universalize(searched))) && (selected_tag === "none" ? true : findTags(i.tags, selected_tag))) {
 			dom += `<li class="product-list-item-container" data-reference="${escapeHtml(i.reference)}" tabindex="0" role="button" aria-label="${escapeHtml(i.label)}">`;
 			dom += `<h3>${escapeHtml(i.label)}</h3>`;
@@ -297,26 +296,7 @@ async function refreshData() {
 	} else {
 		company_data = [];
 	}
-
-	updateFooterData();
 	updateSelectTagsData();
-}
-
-function updateFooterData() {
-	let ref_count = 0;
-	let stock_count = 0;
-	let total_price = 0;
-	for (let i of product_list) {
-		for (let j of i.stock) {
-			total_price += j.purchase_price * j.count;
-			stock_count += j.count;
-		}
-		ref_count += 1;
-	}
-	const text = `Références : ${ref_count} | Stocks : ${stock_count} | Valeur inventaire : ${total_price.toFixed(2)}€ |`;
-	footer_info_span.innerText = text;
-	const footer_company_name = document.querySelector("#footer-company-name");
-	footer_company_name.innerText=company_data.name;
 }
 
 function updateSelectTagsData() {
