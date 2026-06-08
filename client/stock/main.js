@@ -79,6 +79,8 @@ const product_input_search = document.getElementById("menu-search-input-search")
 const footer_info_span = document.querySelector("#footer-data");
 const element_viewer = document.querySelector("#element-viewer");
 
+let selected_tag = "none";
+
 let product_list = [];
 let stock_list = [];
 let tag_list = [];
@@ -185,7 +187,8 @@ async function generateProductList(searched = "") {
 	let dom = "";
 
 	for (let i of product_list) {
-		if (searched === "" || i.label.includes(searched) || i.reference.includes(searched) || findTags(i.tags, searched)) {
+		console.log(selected_tag)
+		if ((searched === "" || universalize(i.label).includes(universalize(searched)) || universalize(i.reference).includes(universalize(searched))) && (selected_tag === "none" ? true : findTags(i.tags, selected_tag))) {
 			dom += `<li class="product-list-item-container" data-reference="${escapeHtml(i.reference)}" tabindex="0" role="button" aria-label="${escapeHtml(i.label)}">`;
 			dom += `<h3>${escapeHtml(i.label)}</h3>`;
 			dom += `<p>${escapeHtml(i.reference)}</p>`;
@@ -223,9 +226,13 @@ async function generateProductList(searched = "") {
 }
 
 async function bindActions() {
-	product_input_search.addEventListener("input", () => { generateProductList(product_input_search.value); });
+	product_input_search.addEventListener("input", () => {
+		generateProductList(product_input_search.value);
+	});
+
 	menu_search_select_tags.addEventListener("change", () => {
-		generateProductList(menu_search_select_tags.value === "none" ? "" : menu_search_select_tags.value);
+		selected_tag=menu_search_select_tags.value;
+		generateProductList(product_input_search.value);
 	});
 
 	const menu_add_item = document.querySelector("#menu-bar-add-item");
@@ -313,7 +320,6 @@ function updateFooterData() {
 }
 
 function updateSelectTagsData() {
-	console.log(tag_list)
 	let dom = "<option value='none' selected>Aucun</option>";
 	for (let i of tag_list) {
 		const name = escapeHtml(i.label);
@@ -1144,7 +1150,15 @@ function displayElementViewer(mode = "item", data = {}) {
 }
 
 async function displayElements() {
-	await generateProductList();
+	await generateProductList(product_input_search.value);
+}
+
+function universalize(str) {
+    return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replaceAll(" ", "");
 }
 
 function escapeHtml(str) {
