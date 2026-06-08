@@ -1,16 +1,28 @@
+/* ===========================
+   Variables — système de design unifié
+   =========================== */
 :root {
 	--color-bg: #1a1a1a;
 	--color-surface: #000000;
-	--color-text: #ffffff;
-	--color-text-muted: #b1b1b1;
-	--color-tag-bg: #444444;
-	--color-tag-text: #ffffff;
-	--color-item-hover: rgba(255, 255, 255, 0.67);
-	--color-viewer-overlay: rgba(26, 26, 26, 0.85);
-	--transition-base: 0.15s ease;
+	--color-card: #1c1c1f;
+	--color-card-border: #2a2a2e;
+	--color-text: #e8e8ec;
+	--color-text-muted: #8e8e93;
+	--color-accent: #3b82f6;
+	--color-accent-subtle: rgba(59, 130, 246, 0.12);
+	--color-green: #34d399;
+	--color-green-subtle: rgba(52, 211, 153, 0.12);
+	--color-divider: #2a2a2e;
+	--transition-base: 0.2s ease;
 	--header-height: 85px;
+	--radius-card: 12px;
+	--radius-btn: 8px;
+	--shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--color-card-border);
 }
 
+/* ===========================
+   Réinitialisation
+   =========================== */
 *,
 *::before,
 *::after {
@@ -32,14 +44,14 @@
 	border: 0;
 }
 
+/* ===========================
+   Base
+   =========================== */
 body {
 	background-color: var(--color-bg);
 	color: var(--color-text);
 	min-height: 100vh;
-}
-
-body.viewer-ouvert {
-	overflow: hidden;
+	line-height: 1.5;
 }
 
 header,
@@ -73,47 +85,351 @@ header {
 	border-radius: 4px;
 }
 
-#navbar-icons-comp{
+#navbar-icons-comp {
 	display: flex;
 	align-items: center;
-	gap:15px
+	gap: 15px;
 }
 
 main {
 	min-height: 86vh;
-	padding: 10px;
+	padding: 20px 16px;
 }
 
 footer {
 	min-height: 50px;
 }
 
-.flex {
-	display: flex;
+a {
+	color: var(--color-text);
 }
 
-section {
-	margin: 20px 10px;
+/* ===========================
+   Tableau de bord — structure
+   =========================== */
+.dashboard {
+	max-width: 1400px;
+	margin: 0 auto;
 	display: flex;
-	flex-wrap: wrap;
-	max-width: 100%;
-	min-width: 100%;
-	justify-content: space-around;
+	flex-direction: column;
+	gap: 16px;
 }
 
+/* ===========================
+   Indicateurs clés (KPI)
+   =========================== */
+.kpi-row {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 12px;
+}
+
+.kpi-card {
+	background: var(--color-card);
+	border-radius: var(--radius-card);
+	box-shadow: var(--shadow-card);
+	padding: 16px 18px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.kpi-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--color-card-border);
+}
+
+.kpi-label {
+	font-size: 0.72rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--color-text-muted);
+}
+
+.kpi-value {
+	font-size: 1.4rem;
+	font-weight: 700;
+	color: var(--color-text);
+	font-variant-numeric: tabular-nums;
+	letter-spacing: -0.02em;
+}
+
+.kpi-value--accent {
+	color: var(--color-accent);
+}
+
+.kpi-value--small {
+	font-size: 1rem;
+}
+
+/* ===========================
+   Cartes de graphiques
+   =========================== */
+.chart-card {
+	background: var(--color-card);
+	border-radius: var(--radius-card);
+	box-shadow: var(--shadow-card);
+	padding: 18px 20px;
+	overflow: hidden;
+}
+
+.chart-card-title {
+	font-size: 0.78rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--color-text-muted);
+	margin-bottom: 12px;
+}
+
+.chart-container {
+	width: 100%;
+	min-height: 200px;
+}
+
+.chart-container--donut {
+	min-height: 240px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* ===========================
+   Ligne mixte (barres côte à côte)
+   =========================== */
+.split-row {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 16px;
+}
+
+/* ===========================
+   Grille de beignets
+   =========================== */
+.donuts-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 12px;
+}
+
+/* ===========================
+   Tableau des dernières acquisitions
+   =========================== */
+.table-wrapper {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.recent-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.82rem;
+}
+
+.recent-table thead th {
+	text-align: left;
+	font-size: 0.7rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--color-text-muted);
+	padding: 8px 12px 10px;
+	border-bottom: 1px solid var(--color-divider);
+	white-space: nowrap;
+}
+
+.recent-table tbody td {
+	padding: 10px 12px;
+	border-bottom: 1px solid var(--color-divider);
+	color: var(--color-text);
+	vertical-align: middle;
+}
+
+.recent-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.recent-table tbody tr {
+	transition: background-color var(--transition-base);
+}
+
+.recent-table tbody tr:hover {
+	background-color: rgba(255, 255, 255, 0.03);
+}
+
+.col-num {
+	text-align: right !important;
+}
+
+.cell-date {
+	color: var(--color-text-muted);
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+	font-size: 0.78rem;
+}
+
+.cell-article {
+	font-weight: 600;
+	max-width: 200px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.cell-lot {
+	color: var(--color-text-muted);
+}
+
+.cell-num {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+
+.cell-total {
+	text-align: right;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	color: var(--color-accent);
+}
+
+.cell-location,
+.cell-owner {
+	font-size: 0.78rem;
+	color: var(--color-text-muted);
+}
+
+.cell-empty {
+	text-align: center;
+	color: var(--color-text-muted);
+	padding: 24px 12px;
+	font-style: italic;
+}
+
+/* ===========================
+   Adaptatif — tablette (≥ 600 px)
+   =========================== */
+@media (min-width: 600px) {
+	.kpi-row {
+		grid-template-columns: repeat(4, 1fr);
+	}
+
+	.donuts-grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 16px;
+	}
+
+	.split-row {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+/* ===========================
+   Adaptatif — bureau (≥ 1100 px)
+   =========================== */
 @media (min-width: 1100px) {
-
 	header,
 	footer {
 		padding: 20px;
 	}
 
 	main {
-		display: flex;
-		padding: 0;
+		padding: 32px 40px;
 	}
 
-	#menu-bar-item {
-		margin-left: 6%;
+	.dashboard {
+		gap: 20px;
 	}
+
+	.kpi-row {
+		gap: 16px;
+	}
+
+	.kpi-card {
+		padding: 20px 24px;
+	}
+
+	.kpi-value {
+		font-size: 1.7rem;
+	}
+
+	.chart-card {
+		padding: 22px 28px;
+	}
+
+	.chart-container {
+		min-height: 350px;
+	}
+
+	.split-row {
+		gap: 20px;
+	}
+
+	.donuts-grid {
+		grid-template-columns: repeat(4, 1fr);
+		gap: 20px;
+	}
+
+	.chart-container--donut {
+		min-height: 280px;
+	}
+}
+
+/* ===========================
+   Surcharge ApexCharts — thème sombre
+   =========================== */
+.apexcharts-tooltip {
+	background: var(--color-card) !important;
+	border: 1px solid var(--color-card-border) !important;
+	border-radius: var(--radius-btn) !important;
+	color: var(--color-text) !important;
+}
+
+.apexcharts-tooltip-title {
+	background: var(--color-surface) !important;
+	border-bottom: 1px solid var(--color-card-border) !important;
+	color: var(--color-text) !important;
+}
+
+.apexcharts-xaxistooltip,
+.apexcharts-yaxistooltip {
+	background: var(--color-card) !important;
+	border: 1px solid var(--color-card-border) !important;
+	color: var(--color-text) !important;
+}
+
+.apexcharts-xaxistooltip-bottom::before,
+.apexcharts-xaxistooltip-bottom::after {
+	border-bottom-color: var(--color-card-border) !important;
+}
+
+.apexcharts-menu {
+	background: var(--color-card) !important;
+	border: 1px solid var(--color-card-border) !important;
+}
+
+.apexcharts-menu-item:hover {
+	background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.apexcharts-toolbar svg {
+	fill: var(--color-text-muted) !important;
+}
+
+.apexcharts-reset-icon:hover svg,
+.apexcharts-zoom-icon:hover svg,
+.apexcharts-zoomin-icon:hover svg,
+.apexcharts-zoomout-icon:hover svg,
+.apexcharts-pan-icon:hover svg,
+.apexcharts-menu-icon:hover svg {
+	fill: var(--color-text) !important;
+}
+
+.apexcharts-legend-text {
+	color: var(--color-text-muted) !important;
+}
+
+.apexcharts-gridline {
+	stroke: var(--color-divider) !important;
 }

@@ -4,22 +4,21 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Inventory Manager - Dashboard</title>
+	<title>Inventory Manager — Tableau de bord</title>
 	<link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
 	<header>
-		<h1><a href="/" aria-label="Acceuil" class="header-link">Inventory Manager</a></h1>
+		<h1><a href="/" aria-label="Accueil" class="header-link">Inventory Manager</a></h1>
 		<nav id="navbar-icons-comp">
-			<a href="/" aria-label="Acceuil" class="header-link">
+			<a href="/" aria-label="Accueil" class="header-link">
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-house"
 					viewBox="0 0 16 16">
 					<path
 						d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
 				</svg>
 			</a>
-		
 			<a href="/stock" aria-label="Inventaire" class="header-link">
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-box-seam"
 					viewBox="0 0 16 16">
@@ -34,7 +33,7 @@
 						d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z" />
 				</svg>
 			</a>
-			<a href="/app-settings" aria-label="App Settings" class="header-link">
+			<a href="/app-settings" aria-label="Réglages" class="header-link">
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building-lock"
 					viewBox="0 0 16 16">
 					<path
@@ -46,25 +45,115 @@
 		</nav>
 	</header>
 	<main>
-		<section class="flex">
-			<div>
-				<h2>Étiquettes</h2>
-				<span id="donut1"></span>
+		<div class="dashboard">
+
+			<!-- Indicateurs clés — ligne 1 -->
+			<section class="kpi-row" aria-label="Indicateurs clés">
+				<div class="kpi-card">
+					<span class="kpi-label">Références</span>
+					<span class="kpi-value" id="kpi-val-references">–</span>
+				</div>
+				<div class="kpi-card">
+					<span class="kpi-label">Unités en stock</span>
+					<span class="kpi-value" id="kpi-val-stocks">–</span>
+				</div>
+				<div class="kpi-card">
+					<span class="kpi-label">Valeur inventaire</span>
+					<span class="kpi-value kpi-value--accent" id="kpi-val-value">–</span>
+				</div>
+				<div class="kpi-card">
+					<span class="kpi-label">Emplacements</span>
+					<span class="kpi-value" id="kpi-val-locations">–</span>
+				</div>
+			</section>
+
+			<!-- Indicateurs clés — ligne 2 -->
+			<section class="kpi-row" aria-label="Indicateurs secondaires">
+				<div class="kpi-card">
+					<span class="kpi-label">Clients</span>
+					<span class="kpi-value" id="kpi-val-clients">–</span>
+				</div>
+				<div class="kpi-card">
+					<span class="kpi-label">Prix moyen / unité</span>
+					<span class="kpi-value" id="kpi-val-avg-price">–</span>
+				</div>
+				<div class="kpi-card">
+					<span class="kpi-label">Lots soumis à TVA</span>
+					<span class="kpi-value" id="kpi-val-vat">–</span>
+				</div>
+				<div class="kpi-card">
+					<span class="kpi-label">Dernier achat</span>
+					<span class="kpi-value kpi-value--small" id="kpi-val-last-purchase">–</span>
+				</div>
+			</section>
+
+			<!-- Chronologie pleine largeur -->
+			<section class="chart-card chart-card--wide" aria-labelledby="chart-timeseries-title">
+				<h2 class="chart-card-title" id="chart-timeseries-title">Évolution de la valeur</h2>
+				<div class="chart-container" id="timeseries-stock"></div>
+			</section>
+
+			<!-- Ligne mixte : barres + tableau -->
+			<div class="split-row">
+				<section class="chart-card" aria-labelledby="chart-top-items-title">
+					<h2 class="chart-card-title" id="chart-top-items-title">Top articles par valeur</h2>
+					<div class="chart-container" id="bar-top-items"></div>
+				</section>
+				<section class="chart-card" aria-labelledby="chart-monthly-title">
+					<h2 class="chart-card-title" id="chart-monthly-title">Acquisitions par mois</h2>
+					<div class="chart-container" id="bar-monthly"></div>
+				</section>
 			</div>
-			<div>
-				<h2>Localisation</h2>
-				<span id="donut2"></span>
+
+			<!-- Dernières acquisitions -->
+			<section class="chart-card chart-card--wide" aria-labelledby="table-recent-title">
+				<h2 class="chart-card-title" id="table-recent-title">Dernières acquisitions</h2>
+				<div class="table-wrapper">
+					<table class="recent-table" id="table-recent" aria-label="Dernières acquisitions">
+						<thead>
+							<tr>
+								<th scope="col">Date</th>
+								<th scope="col">Article</th>
+								<th scope="col">Lot</th>
+								<th scope="col" class="col-num">Qté</th>
+								<th scope="col" class="col-num">Prix unit.</th>
+								<th scope="col" class="col-num">Total</th>
+								<th scope="col">Emplacement</th>
+								<th scope="col">Propriétaire</th>
+							</tr>
+						</thead>
+						<tbody id="table-recent-body"></tbody>
+					</table>
+				</div>
+			</section>
+
+			<!-- Valeur par emplacement -->
+			<section class="chart-card chart-card--wide" aria-labelledby="chart-value-location-title">
+				<h2 class="chart-card-title" id="chart-value-location-title">Valeur par emplacement</h2>
+				<div class="chart-container" id="bar-value-location"></div>
+			</section>
+
+			<!-- Beignets -->
+			<div class="donuts-grid">
+				<section class="chart-card" aria-labelledby="chart-tags-title">
+					<h2 class="chart-card-title" id="chart-tags-title">Étiquettes</h2>
+					<div class="chart-container chart-container--donut" id="donut1"></div>
+				</section>
+				<section class="chart-card" aria-labelledby="chart-location-title">
+					<h2 class="chart-card-title" id="chart-location-title">Répartition par emplacement</h2>
+					<div class="chart-container chart-container--donut" id="donut2"></div>
+				</section>
+				<section class="chart-card" aria-labelledby="chart-condition-title">
+					<h2 class="chart-card-title" id="chart-condition-title">État</h2>
+					<div class="chart-container chart-container--donut" id="donut3"></div>
+				</section>
+				<section class="chart-card" aria-labelledby="chart-owner-title">
+					<h2 class="chart-card-title" id="chart-owner-title">Propriétaire</h2>
+					<div class="chart-container chart-container--donut" id="donut4"></div>
+				</section>
 			</div>
-			<div>
-				<h2>État</h2>
-				<span id="donut3"></span>
-			</div>
-			<div>
-				<h2>Propriétaire</h2>
-				<span id="donut4"></span>
-			</div>
-			<span id="donut5"></span>
-		</section>
+
+		</div>
 	</main>
 	<footer>
 		<p>| <span id="footer-company-name"></span> | <span id="footer-data"></span></p>

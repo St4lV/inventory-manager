@@ -66,18 +66,7 @@ class HTTPRequest {
 	static delete(url) { return new HTTPRequest(url).delete(); }
 }
 
-const svg = {
-	close: `<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/></svg>`,
-	edit: `<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>`,
-	delete: `<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16"><path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/></svg>`,
-	confirm: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16"><path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/></svg>`,
-	add: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-dotted" viewBox="0 0 16 16"><path d="M8 0q-.264 0-.523.017l.064.998a7 7 0 0 1 .918 0l.064-.998A8 8 0 0 0 8 0M6.44.152q-.52.104-1.012.27l.321.948q.43-.147.884-.237L6.44.153zm4.132.271a8 8 0 0 0-1.011-.27l-.194.98q.453.09.884.237zm1.873.925a8 8 0 0 0-.906-.524l-.443.896q.413.205.793.459zM4.46.824q-.471.233-.905.524l.556.83a7 7 0 0 1 .793-.458zM2.725 1.985q-.394.346-.74.74l.752.66q.303-.345.648-.648zm11.29.74a8 8 0 0 0-.74-.74l-.66.752q.346.303.648.648zm1.161 1.735a8 8 0 0 0-.524-.905l-.83.556q.254.38.458.793l.896-.443zM1.348 3.555q-.292.433-.524.906l.896.443q.205-.413.459-.793zM.423 5.428a8 8 0 0 0-.27 1.011l.98.194q.09-.453.237-.884zM15.848 6.44a8 8 0 0 0-.27-1.012l-.948.321q.147.43.237.884zM.017 7.477a8 8 0 0 0 0 1.046l.998-.064a7 7 0 0 1 0-.918zM16 8a8 8 0 0 0-.017-.523l-.998.064a7 7 0 0 1 0 .918l.998.064A8 8 0 0 0 16 8M.152 9.56q.104.52.27 1.012l.948-.321a7 7 0 0 1-.237-.884l-.98.194zm15.425 1.012q.168-.493.27-1.011l-.98-.194q-.09.453-.237.884zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a7 7 0 0 1-.458-.793zm13.828.905q.292-.434.524-.906l-.896-.443q-.205.413-.459.793zm-12.667.83q.346.394.74.74l.66-.752a7 7 0 0 1-.648-.648zm11.29.74q.394-.346.74-.74l-.752-.66q-.302.346-.648.648zm-1.735 1.161q.471-.233.905-.524l-.556-.83a7 7 0 0 1-.793.458zm-7.985-.524q.434.292.906.524l.443-.896a7 7 0 0 1-.793-.459zm1.873.925q.493.168 1.011.27l.194-.98a7 7 0 0 1-.884-.237zm4.132.271a8 8 0 0 0 1.012-.27l-.321-.948a7 7 0 0 1-.884.237l.194.98zm-2.083.135a8 8 0 0 0 1.046 0l-.064-.998a7 7 0 0 1-.918 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/></svg>`,
-};
-
-const menu_search_select_tags = document.querySelector("#menu-search-select-tags");
-const product_input_search = document.getElementById("menu-search-input-search");
 const footer_info_span = document.querySelector("#footer-data");
-const element_viewer = document.querySelector("#element-viewer");
 
 let product_list = [];
 let stock_list = [];
@@ -88,70 +77,57 @@ let owner_list = [];
 let client_list = [];
 let company_data = {};
 
-async function bindActions() {
+/* ===========================
+   Thème ApexCharts partagé
+   =========================== */
+const chartColors = {
+	text: '#8e8e93',
+	grid: '#2a2a2e',
+	accent: '#3b82f6',
+	series: ['#3b82f6', '#34d399', '#fbbf24', '#f97316', '#ef4444', '#a78bfa', '#ec4899', '#06b6d4'],
+};
 
-}
-
+/* ===========================
+   Récupération des données
+   =========================== */
 async function refreshData() {
-	const product_list_fetch = await (new HTTPRequest("/api/v1/item/")).get();
-	if (product_list_fetch.status === 200) {
-		product_list = product_list_fetch.data;
-	} else {
-		product_list = [];
-	}
+	const endpoints = [
+		{ key: 'product_list', url: '/api/v1/item/' },
+		{ key: 'stock_list', url: '/api/v1/stock/' },
+		{ key: 'tag_list', url: '/api/v1/tag/' },
+		{ key: 'condition_list', url: '/api/v1/condition/' },
+		{ key: 'address_list', url: '/api/v1/location/' },
+		{ key: 'owner_list', url: '/api/v1/owner/' },
+		{ key: 'client_list', url: '/api/v1/client/' },
+		{ key: 'company_data', url: '/api/v1/company/' },
+	];
 
-	const stock_list_fetch = await (new HTTPRequest("/api/v1/stock/")).get();
-	if (stock_list_fetch.status === 200) {
-		stock_list = stock_list_fetch.data;
-	} else {
-		stock_list = [];
-	}
+	const results = await Promise.allSettled(
+		endpoints.map(e => new HTTPRequest(e.url).get())
+	);
 
-	const tag_list_fetch = await (new HTTPRequest("/api/v1/tag/")).get();
-	if (tag_list_fetch.status === 200) {
-		tag_list = tag_list_fetch.data;
-	} else {
-		tag_list = [];
-	}
+	results.forEach((r, i) => {
+		const k = endpoints[i].key;
+		const fallback = k === 'company_data' ? {} : [];
+		window[k] = (r.status === 'fulfilled' && r.value.status === 200) ? r.value.data : fallback;
+	});
 
-	const condition_list_fetch = await (new HTTPRequest("/api/v1/condition/")).get();
-	if (condition_list_fetch.status === 200) {
-		condition_list = condition_list_fetch.data;
-	} else {
-		condition_list = [];
-	}
-
-	const address_list_fetch = await (new HTTPRequest("/api/v1/location/")).get();
-	if (address_list_fetch.status === 200) {
-		address_list = address_list_fetch.data;
-	} else {
-		address_list = [];
-	}
-
-	const owner_list_fetch = await (new HTTPRequest("/api/v1/owner/")).get();
-	if (owner_list_fetch.status === 200) {
-		owner_list = owner_list_fetch.data;
-	} else {
-		owner_list = [];
-	}
-
-	const client_list_fetch = await (new HTTPRequest("/api/v1/client/")).get();
-	if (client_list_fetch.status === 200) {
-		client_list = client_list_fetch.data;
-	} else {
-		client_list = [];
-	}
-
-	const company_data_fetch = await (new HTTPRequest("/api/v1/company/")).get();
-	if (company_data_fetch.status === 200) {
-		company_data = company_data_fetch.data;
-	} else {
-		company_data = [];
-	}
+	// Variables locales en sync
+	product_list = window.product_list;
+	stock_list = window.stock_list;
+	tag_list = window.tag_list;
+	condition_list = window.condition_list;
+	address_list = window.address_list;
+	owner_list = window.owner_list;
+	client_list = window.client_list;
+	company_data = window.company_data;
 
 	updateFooterData();
 }
 
+/* ===========================
+   Pied de page
+   =========================== */
 function updateFooterData() {
 	let ref_count = 0;
 	let stock_count = 0;
@@ -163,10 +139,60 @@ function updateFooterData() {
 		}
 		ref_count += 1;
 	}
-	const text = `Références : ${ref_count} | Stocks : ${stock_count} | Valeur inventaire : ${total_price.toFixed(2)}€ |`;
-	footer_info_span.innerText = text;
-	const footer_company_name = document.querySelector("#footer-company-name");
-	footer_company_name.innerText=company_data.name;
+	footer_info_span.innerText = `Références : ${ref_count} | Stocks : ${stock_count} | Valeur inventaire : ${total_price.toFixed(2)}€ |`;
+	document.querySelector("#footer-company-name").innerText = company_data.name || '';
+}
+
+/* ===========================
+   Indicateurs clés
+   =========================== */
+function updateKPIs() {
+	let ref_count = 0;
+	let stock_count = 0;
+	let total_price = 0;
+	let vat_count = 0;
+	let total_lots = 0;
+	let last_date = null;
+
+	for (let i of product_list) {
+		ref_count += 1;
+		for (let j of i.stock) {
+			total_price += j.purchase_price * j.count;
+			stock_count += j.count;
+			total_lots += 1;
+			if (j.vat && j.vat.set) vat_count += 1;
+			if (j.purchase_date) {
+				const d = new Date(j.purchase_date);
+				if (!last_date || d > last_date) last_date = d;
+			}
+		}
+	}
+
+	const avg_price = stock_count > 0 ? (total_price / stock_count) : 0;
+	const vat_pct = total_lots > 0 ? Math.round((vat_count / total_lots) * 100) : 0;
+
+	document.getElementById("kpi-val-references").textContent = ref_count;
+	document.getElementById("kpi-val-stocks").textContent = stock_count;
+	document.getElementById("kpi-val-value").textContent = `${total_price.toFixed(2)} €`;
+	document.getElementById("kpi-val-locations").textContent = address_list.length;
+	document.getElementById("kpi-val-clients").textContent = client_list.length;
+	document.getElementById("kpi-val-avg-price").textContent = `${avg_price.toFixed(2)} €`;
+	document.getElementById("kpi-val-vat").textContent = `${vat_pct} %`;
+	document.getElementById("kpi-val-last-purchase").textContent = last_date
+		? last_date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
+		: '—';
+}
+
+/* ===========================
+   Utilitaires
+   =========================== */
+function escapeHtml(str) {
+	return String(str)
+		.replace(/&/g, "&amp;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#39;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;");
 }
 
 function objectPathResolver(obj, path) {
@@ -174,16 +200,333 @@ function objectPathResolver(obj, path) {
 	return cles.reduce((a, key) => a?.[key], obj);
 }
 
-async function displayGraphDonut(list=[], filter_param="", tag_id="span", colors = [],) {
+function tagSplitterDonut(arr) {
+	let result = [];
+	for (let i of arr) {
+		if (i.tags.length > 0) {
+			for (let t of i.tags) result.push({ tag: t });
+		} else {
+			result.push({ tag: "aucune" });
+		}
+	}
+	return result;
+}
+
+function countSplitterDonut(arr) {
+	let result = [];
+	for (let i of arr) {
+		if (i.count >= 1) {
+			for (let j = 1; j <= i.count; j++) result.push(i);
+		}
+	}
+	return result;
+}
+
+/* ===========================
+   Chronologie cumulative
+   =========================== */
+function displayZoomableTimeseries() {
+	const stocks = stock_list;
+	let cumul = 0;
+	const seriesData = stocks
+		.filter(s => s.purchase_date)
+		.sort((a, b) => new Date(a.purchase_date) - new Date(b.purchase_date))
+		.map(s => {
+			cumul += s.purchase_price * s.count;
+			return { x: new Date(s.purchase_date).getTime(), y: cumul };
+		});
+
+	const options = {
+		series: [{ name: 'Valeur cumulée', data: seriesData }],
+		chart: {
+			type: 'area',
+			stacked: false,
+			height: '100%',
+			background: 'transparent',
+			foreColor: chartColors.text,
+			zoom: { type: 'x', enabled: true, autoScaleYaxis: true },
+			toolbar: { autoSelected: 'zoom' },
+		},
+		dataLabels: { enabled: false },
+		markers: { size: 0 },
+		fill: {
+			type: 'gradient',
+			gradient: {
+				shadeIntensity: 1,
+				inverseColors: false,
+				opacityFrom: 0.45,
+				opacityTo: 0.02,
+				stops: [0, 90, 100],
+			},
+		},
+		colors: [chartColors.accent],
+		grid: { borderColor: chartColors.grid, strokeDashArray: 3 },
+		yaxis: {
+			labels: {
+				formatter: (val) => `${val.toFixed(0)} €`,
+				style: { colors: chartColors.text },
+			},
+			title: { text: 'Valeur (€)', style: { color: chartColors.text } },
+		},
+		xaxis: {
+			type: 'datetime',
+			labels: { style: { colors: chartColors.text } },
+			axisBorder: { color: chartColors.grid },
+			axisTicks: { color: chartColors.grid },
+		},
+		tooltip: {
+			theme: 'dark',
+			shared: false,
+			y: { formatter: (val) => `${val.toFixed(2)} €` },
+		},
+	};
+
+	new ApexCharts(document.querySelector('#timeseries-stock'), options).render();
+}
+
+/* ===========================
+   Top articles par valeur (barres horizontales)
+   =========================== */
+function displayTopItemsBar() {
+	const itemValues = {};
+	for (let i of product_list) {
+		let val = 0;
+		for (let j of i.stock) val += j.purchase_price * j.count;
+		if (val > 0) itemValues[i.label] = val;
+	}
+
+	const sorted = Object.entries(itemValues)
+		.sort((a, b) => b[1] - a[1])
+		.slice(0, 10);
+
+	if (sorted.length === 0) return;
+
+	const options = {
+		series: [{ name: 'Valeur', data: sorted.map(e => e[1]) }],
+		chart: {
+			type: 'bar',
+			height: '100%',
+			background: 'transparent',
+			foreColor: chartColors.text,
+			toolbar: { show: false },
+		},
+		plotOptions: {
+			bar: {
+				horizontal: true,
+				borderRadius: 4,
+				barHeight: '65%',
+			},
+		},
+		dataLabels: {
+			enabled: true,
+			formatter: (val) => `${val.toFixed(0)} €`,
+			style: { fontSize: '11px', colors: ['#e8e8ec'] },
+			offsetX: 5,
+		},
+		colors: [chartColors.accent],
+		xaxis: {
+			categories: sorted.map(e => e[0]),
+			labels: { style: { colors: chartColors.text }, formatter: (val) => `${val.toFixed(0)} €` },
+			axisBorder: { color: chartColors.grid },
+			axisTicks: { color: chartColors.grid },
+		},
+		yaxis: {
+			labels: {
+				style: { colors: chartColors.text, fontSize: '11px' },
+				maxWidth: 180,
+			},
+		},
+		grid: { borderColor: chartColors.grid, strokeDashArray: 3 },
+		tooltip: {
+			theme: 'dark',
+			y: { formatter: (val) => `${val.toFixed(2)} €` },
+		},
+	};
+
+	new ApexCharts(document.querySelector('#bar-top-items'), options).render();
+}
+
+/* ===========================
+   Acquisitions par mois (barres verticales)
+   =========================== */
+function displayMonthlyBar() {
+	const monthly = {};
+	for (let s of stock_list) {
+		if (!s.purchase_date) continue;
+		const d = new Date(s.purchase_date);
+		const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+		if (!monthly[key]) monthly[key] = { count: 0, value: 0 };
+		monthly[key].count += s.count;
+		monthly[key].value += s.purchase_price * s.count;
+	}
+
+	const sorted = Object.entries(monthly).sort((a, b) => a[0].localeCompare(b[0]));
+	if (sorted.length === 0) return;
+
+	const labels = sorted.map(e => {
+		const [y, m] = e[0].split('-');
+		return new Date(y, m - 1).toLocaleDateString('fr-FR', { month: 'short', year: '2-digit' });
+	});
+
+	const options = {
+		series: [
+			{ name: 'Unités', type: 'column', data: sorted.map(e => e[1].count) },
+			{ name: 'Valeur (€)', type: 'line', data: sorted.map(e => e[1].value) },
+		],
+		chart: {
+			height: '100%',
+			background: 'transparent',
+			foreColor: chartColors.text,
+			toolbar: { show: false },
+		},
+		stroke: { width: [0, 3], curve: 'smooth' },
+		colors: [chartColors.accent, '#34d399'],
+		plotOptions: {
+			bar: { borderRadius: 4, columnWidth: '55%' },
+		},
+		dataLabels: { enabled: false },
+		xaxis: {
+			categories: labels,
+			labels: { style: { colors: chartColors.text, fontSize: '10px' }, rotate: -45 },
+			axisBorder: { color: chartColors.grid },
+			axisTicks: { color: chartColors.grid },
+		},
+		yaxis: [
+			{
+				title: { text: 'Unités', style: { color: chartColors.text } },
+				labels: { style: { colors: chartColors.text } },
+			},
+			{
+				opposite: true,
+				title: { text: 'Valeur (€)', style: { color: '#34d399' } },
+				labels: {
+					style: { colors: '#34d399' },
+					formatter: (val) => `${val.toFixed(0)} €`,
+				},
+			},
+		],
+		grid: { borderColor: chartColors.grid, strokeDashArray: 3 },
+		legend: {
+			labels: { colors: chartColors.text },
+			markers: { size: 6 },
+		},
+		tooltip: {
+			theme: 'dark',
+			shared: true,
+			intersect: false,
+		},
+	};
+
+	new ApexCharts(document.querySelector('#bar-monthly'), options).render();
+}
+
+/* ===========================
+   Valeur par emplacement (barres)
+   =========================== */
+function displayValueByLocation() {
+	const locationValues = {};
+	for (let s of stock_list) {
+		const loc = s.location_data ? s.location_data.label : 'Inconnu';
+		if (!locationValues[loc]) locationValues[loc] = 0;
+		locationValues[loc] += s.purchase_price * s.count;
+	}
+
+	const sorted = Object.entries(locationValues).sort((a, b) => b[1] - a[1]);
+	if (sorted.length === 0) return;
+
+	const options = {
+		series: [{ name: 'Valeur', data: sorted.map(e => e[1]) }],
+		chart: {
+			type: 'bar',
+			height: Math.max(200, sorted.length * 44),
+			background: 'transparent',
+			foreColor: chartColors.text,
+			toolbar: { show: false },
+		},
+		plotOptions: {
+			bar: {
+				horizontal: true,
+				borderRadius: 4,
+				barHeight: '60%',
+				distributed: true,
+			},
+		},
+		dataLabels: {
+			enabled: true,
+			formatter: (val) => `${val.toFixed(0)} €`,
+			style: { fontSize: '11px', colors: ['#e8e8ec'] },
+			offsetX: 5,
+		},
+		colors: chartColors.series,
+		xaxis: {
+			categories: sorted.map(e => e[0]),
+			labels: { style: { colors: chartColors.text }, formatter: (val) => `${val.toFixed(0)} €` },
+			axisBorder: { color: chartColors.grid },
+			axisTicks: { color: chartColors.grid },
+		},
+		yaxis: {
+			labels: { style: { colors: chartColors.text, fontSize: '11px' } },
+		},
+		grid: { borderColor: chartColors.grid, strokeDashArray: 3 },
+		legend: { show: false },
+		tooltip: {
+			theme: 'dark',
+			y: { formatter: (val) => `${val.toFixed(2)} €` },
+		},
+	};
+
+	new ApexCharts(document.querySelector('#bar-value-location'), options).render();
+}
+
+/* ===========================
+   Tableau des dernières acquisitions
+   =========================== */
+function displayRecentTable() {
+	const tbody = document.getElementById("table-recent-body");
+	const recent = stock_list
+		.filter(s => s.purchase_date)
+		.sort((a, b) => new Date(b.purchase_date) - new Date(a.purchase_date))
+		.slice(0, 10);
+
+	if (recent.length === 0) {
+		tbody.innerHTML = `<tr><td colspan="8" class="cell-empty">Aucune acquisition enregistrée.</td></tr>`;
+		return;
+	}
+
+	let dom = '';
+	for (let s of recent) {
+		const date = new Date(s.purchase_date).toLocaleDateString('fr-FR', {
+			day: 'numeric', month: 'short', year: 'numeric',
+		});
+		const article = s.item_data ? s.item_data.label : '—';
+		const total = (s.purchase_price * s.count).toFixed(2);
+		const location = s.location_data ? s.location_data.label : '—';
+		const owner = s.owner_data ? s.owner_data.label : '—';
+
+		dom += `<tr>
+			<td class="cell-date">${escapeHtml(date)}</td>
+			<td class="cell-article" title="${escapeHtml(article)}">${escapeHtml(article)}</td>
+			<td class="cell-lot">${escapeHtml(s.label)}</td>
+			<td class="cell-num">${s.count}</td>
+			<td class="cell-num">${s.purchase_price.toFixed(2)} €</td>
+			<td class="cell-total">${total} €</td>
+			<td class="cell-location">${escapeHtml(location)}</td>
+			<td class="cell-owner">${escapeHtml(owner)}</td>
+		</tr>`;
+	}
+	tbody.innerHTML = dom;
+}
+
+/* ===========================
+   Beignets
+   =========================== */
+function displayGraphDonut(list = [], filter_param = "", tag_id = "", colors = []) {
 	let series_obj = {};
 
 	for (let el of list) {
 		const valeur = objectPathResolver(el, filter_param);
 		if (valeur === undefined) continue;
-
-		if (!series_obj[valeur]) {
-			series_obj[valeur] = 0;
-		}
+		if (!series_obj[valeur]) series_obj[valeur] = 0;
 		series_obj[valeur] += 1;
 	}
 
@@ -194,73 +537,75 @@ async function displayGraphDonut(list=[], filter_param="", tag_id="span", colors
 		series.push(series_obj[el]);
 	}
 
-	var options = {
+	if (series.length === 0) return;
+
+	const options = {
 		series: series,
-		labels:labels,
-		colors: colors,
+		labels: labels,
 		chart: {
 			type: 'donut',
+			background: 'transparent',
+			foreColor: chartColors.text,
 		},
-		stroke: {
-			colors: ['#fff'],
-		},
-		dataLabels: {
-			enabled: false,
-			/*distributed:true,
-			/*textAnchor: 'start',
-			formatter: function (val, opt) {
-				return val
+		colors: colors.length > 0 ? colors : chartColors.series,
+		stroke: { colors: ['#1c1c1f'], width: 2 },
+		dataLabels: { enabled: false },
+		fill: { type: 'gradient' },
+		plotOptions: {
+			pie: {
+				donut: {
+					size: '60%',
+					labels: {
+						show: true,
+						name: { color: '#e8e8ec' },
+						value: { color: '#e8e8ec', fontSize: '1.2rem', fontWeight: 700 },
+						total: {
+							show: true,
+							color: chartColors.text,
+							fontSize: '0.75rem',
+							label: 'Total',
+							formatter: (w) => w.globals.seriesTotals.reduce((a, b) => a + b, 0),
+						},
+					},
+				},
 			},
-			offsetX: 0,*/
-		},
-		fill: {
-			type: 'gradient',
 		},
 		legend: {
-			//position: "bottom",
-			show: false,
+			position: 'bottom',
+			fontSize: '11px',
+			labels: { colors: chartColors.text },
+			markers: { size: 6, offsetX: -3 },
+			itemMargin: { horizontal: 6, vertical: 2 },
 		},
-	}
+		responsive: [{
+			breakpoint: 600,
+			options: {
+				chart: { height: 260 },
+				legend: { fontSize: '10px' },
+			},
+		}],
+	};
 
-	var chart = new ApexCharts(document.querySelector(tag_id), options)
-	chart.render()
+	new ApexCharts(document.querySelector(tag_id), options).render();
 }
 
-function tagSplitterDonut(arr){
-	let result = []
-	for (let i of arr){
-		if (i.tags.length>0){
-			for (let t of i.tags){
-				result.push({tag:t})
-			}
-		} else {
-			result.push({tag:"none"})
-		}
-	}
-	return result;
-}
-
-function countSplitterDonut(arr){
-	let result = [];
-	for (let i of arr){
-		if (i.count >= 1) {
-			for (let j = 1; j <= i.count; j++) {
-				result.push(i);
-			}
-		}
-	}
-	return result;
-}
-
+/* ===========================
+   Orchestration
+   =========================== */
 async function displayElements() {
-	await displayGraphDonut(tagSplitterDonut(product_list), "tag", "#donut1");
-	await displayGraphDonut(countSplitterDonut(stock_list), "location_data.label", "#donut2");
-	await displayGraphDonut(countSplitterDonut(stock_list), "condition_data.label", "#donut3", ["#00d111", "#ffa047", "#e2b900", "#FF1654", "#247BA0"]);
-	await displayGraphDonut(countSplitterDonut(stock_list), "owner_data.label", "#donut4")
+	updateKPIs();
+	displayZoomableTimeseries();
+	displayTopItemsBar();
+	displayMonthlyBar();
+	displayRecentTable();
+	displayValueByLocation();
+	displayGraphDonut(tagSplitterDonut(product_list), "tag", "#donut1");
+	displayGraphDonut(countSplitterDonut(stock_list), "location_data.label", "#donut2");
+	displayGraphDonut(countSplitterDonut(stock_list), "condition_data.label", "#donut3", ["#34d399", "#fbbf24", "#f97316", "#ef4444", "#3b82f6"]);
+	displayGraphDonut(countSplitterDonut(stock_list), "owner_data.label", "#donut4");
 }
 
 (async () => {
 	await refreshData();
-	await bindActions();
 	await displayElements();
 })();
