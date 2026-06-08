@@ -1,14 +1,23 @@
 :root {
 	--color-bg: #1a1a1a;
 	--color-surface: #000000;
-	--color-text: #ffffff;
-	--color-text-muted: #b1b1b1;
-	--color-tag-bg: #444444;
-	--color-tag-text: #ffffff;
-	--color-item-hover: rgba(255, 255, 255, 0.67);
-	--color-viewer-overlay: rgba(26, 26, 26, 0.85);
-	--transition-base: 0.15s ease;
+	--color-card: #1c1c1f;
+	--color-card-border: #2a2a2e;
+	--color-text: #e8e8ec;
+	--color-text-muted: #8e8e93;
+	--color-accent: #3b82f6;
+	--color-accent-subtle: rgba(59, 130, 246, 0.12);
+	--color-tag-bg: #2a2a2e;
+	--color-tag-text: #c8c8cc;
+	--color-item-hover: rgba(255, 255, 255, 0.04);
+	--color-viewer-overlay: rgba(17, 17, 19, 0.85);
+	--color-divider: #2a2a2e;
+	--transition-base: 0.2s ease;
 	--header-height: 85px;
+	--radius-card: 12px;
+	--radius-chip: 8px;
+	--radius-btn: 8px;
+	--shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--color-card-border);
 }
 
 *,
@@ -36,6 +45,7 @@ body {
 	background-color: var(--color-bg);
 	color: var(--color-text);
 	min-height: 100vh;
+	line-height: 1.5;
 }
 
 body.viewer-ouvert {
@@ -81,7 +91,7 @@ header {
 
 main {
 	min-height: 86vh;
-	padding: 10px;
+	padding: 24px 16px;
 }
 
 footer {
@@ -92,49 +102,211 @@ footer {
 	display: flex;
 }
 
-section {
-	margin: 20px 10px;
-}
+/* ── Conteneur de réglages ── */
 
-ul {
-	margin-left: 25px;
-}
-
-.app-settings-menu-icons-btn {
-	height: 40px;
-	width : 40px;
-	padding: 10px;
-	cursor: pointer;
+.settings-container {
+	max-width: 95%;
+	margin: 0 auto;
 	display: flex;
-	justify-content: center;
-	align-items: center;
-	background: none;
-	border: none;
-	color: var(--color-text);
-	border-radius: 25%;
-	transition: background-color var(--transition-base), color var(--transition-base);
+	flex-direction: column;
+	gap: 20px;
 }
 
-.app-settings-title-comp {
+/* ── Carte ── */
+
+.settings-card {
+	background: var(--color-card);
+	border-radius: var(--radius-card);
+	box-shadow: var(--shadow-card);
+	overflow: hidden;
+}
+
+.settings-card-header {
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
+	padding: 16px 20px;
+	border-bottom: 1px solid var(--color-divider);
 }
 
-.app-settings-menu-icons-btn:hover {
+.settings-card-header h2 {
+	font-size: 0.8rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
 	color: var(--color-text-muted);
-	background-color: rgba(0, 0, 0, 0.33);
+	margin: 0;
 }
 
-.app-settings-menu-icons-btn:focus-visible {
-	outline: 2px solid var(--color-text);
+.settings-card-body {
+	padding: 20px;
+}
+
+/* ── Bouton d'édition ── */
+
+.settings-edit-btn {
+	height: 34px;
+	width: 34px;
+	padding: 0;
+	cursor: pointer;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	background: var(--color-accent-subtle);
+	border: none;
+	color: var(--color-accent);
+	border-radius: var(--radius-btn);
+	transition: background-color var(--transition-base), color var(--transition-base), transform var(--transition-base);
+}
+
+.settings-edit-btn:hover {
+	background-color: rgba(59, 130, 246, 0.22);
+	transform: scale(1.05);
+}
+
+.settings-edit-btn:active {
+	transform: scale(0.96);
+}
+
+.settings-edit-btn:focus-visible {
+	outline: 2px solid var(--color-accent);
 	outline-offset: 2px;
 }
 
-.app-settings-menu-icons-btn svg {
-	height: 24px;
-	width : 24px;
+.settings-edit-btn svg {
+	height: 14px;
+	width: 14px;
 	pointer-events: none;
 }
+
+/* ── Informations de la société ── */
+
+.company-name {
+	font-size: 1.35rem;
+	font-weight: 700;
+	margin-bottom: 16px;
+	color: var(--color-text);
+}
+
+.info-grid {
+	display: grid;
+	gap: 0;
+}
+
+.info-row {
+	display: flex;
+	align-items: baseline;
+	padding: 10px 0;
+	border-bottom: 1px solid var(--color-divider);
+	gap: 12px;
+}
+
+.info-row:last-child {
+	border-bottom: none;
+	padding-bottom: 0;
+}
+
+.info-row dt {
+	flex-shrink: 0;
+	width: 100px;
+	font-size: 0.85rem;
+	font-weight: 500;
+	color: var(--color-text-muted);
+}
+
+.info-row dd {
+	font-size: 0.95rem;
+	color: var(--color-text);
+	word-break: break-word;
+}
+
+/* ── Liste d'entités (clients, emplacements) ── */
+
+.entity-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.entity-item {
+	padding: 16px 20px;
+	border-bottom: 1px solid var(--color-divider);
+	transition: background-color var(--transition-base);
+}
+
+.entity-item:last-child {
+	border-bottom: none;
+}
+
+.entity-item:hover {
+	background-color: var(--color-item-hover);
+}
+
+.entity-item h3 {
+	font-size: 1rem;
+	font-weight: 600;
+	margin-bottom: 4px;
+	color: var(--color-text);
+}
+
+.entity-detail {
+	font-size: 0.875rem;
+	color: var(--color-text-muted);
+	line-height: 1.6;
+}
+
+.entity-siren {
+	margin-top: 4px;
+	font-variant-numeric: tabular-nums;
+	font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+	font-size: 0.8rem;
+	color: var(--color-accent);
+	opacity: 0.8;
+}
+
+/* ── Liste en pastilles (propriétaires, étiquettes) ── */
+
+.chip-list {
+	list-style: none;
+	margin: 0;
+	padding: 16px 20px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.chip-item {
+	background: var(--color-tag-bg);
+	color: var(--color-tag-text);
+	border-radius: var(--radius-chip);
+	padding: 6px 14px;
+	transition: background-color var(--transition-base), transform var(--transition-base);
+}
+
+.chip-item:hover {
+	background: rgba(255, 255, 255, 0.1);
+	transform: translateY(-1px);
+}
+
+.chip-item h3,
+.chip-item p {
+	font-size: 0.85rem;
+	font-weight: 500;
+	margin: 0;
+}
+
+section {
+	margin: 0;
+}
+
+ul {
+	margin-left: 0;
+}
+
+a {
+	color: var(--color-text);
+}
+
 
 @media (min-width: 1100px) {
 
@@ -144,11 +316,34 @@ ul {
 	}
 
 	main {
-		display: flex;
-		padding: 0;
+		padding: 40px 32px;
 	}
 
 	#menu-bar-item {
 		margin-left: 6%;
+	}
+
+	.settings-container {
+		gap: 24px;
+	}
+
+	.settings-card-header {
+		padding: 18px 24px;
+	}
+
+	.settings-card-body {
+		padding: 24px;
+	}
+
+	.entity-item {
+		padding: 18px 24px;
+	}
+
+	.chip-list {
+		padding: 18px 24px;
+	}
+
+	.info-row dt {
+		width: 120px;
 	}
 }

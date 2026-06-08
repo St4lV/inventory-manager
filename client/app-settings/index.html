@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Settings</title>
+	<title>Réglages</title>
 	<link rel="stylesheet" href="/app-settings/style.css">
 </head>
 
@@ -47,100 +47,120 @@
 	</header>
 	<div id="element-viewer" data-opened="false" aria-hidden="true"></div>
 	<main>
-		<section>
-			<div class="app-settings-title-comp">
-				<h2>Company informations :</h2>
-				<button type="button" class="app-settings-menu-icons-btn" aria-label="Modifier les propriétaires">
-					<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>
-				</button>
-			</div>
-			<h3 id="app-settings-company-name">Company Name</h3>
-			<p>Adresse : <span id="app-settings-company-address">42 Rue de la paix, Paris (75013)</span></p>
-			<p>Téléphone : <span id="app-settings-company-tel">+33123456789</span></p>
-			<p>Courriel : <span id="app-settings-company-email">company@email.com</span></p>
-			<p>SIREN : <span id="app-settings-company-siren">000000000</span></p>
-			<hr>
-			<div class="app-settings-title-comp">
-				<h2>Clients</h2>
-				<button type="button" class="app-settings-menu-icons-btn" aria-label="Modifier les propriétaires">
-					<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>
-				</button>
-			</div>
-			<ul id="client-list">
-				<li>
-					<h3>Name</h3>
-					<p>address</p>
-					<p>tel</p>
-					<p>mail</p>
-					<p>SIREN</p>
-					<hr>
-				</li>
-				<li>
-					<h3>Name</h3>
-					<p>address</p>
-					<p>tel</p>
-					<p>mail</p>
-					<p>SIREN</p>
-					<hr>
-				</li>
-			</ul>
-			<div class="app-settings-title-comp">
-				<h2>Owners :</h2>
-				<button type="button" class="app-settings-menu-icons-btn" aria-label="Modifier les propriétaires">
-					<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>
-				</button>
-			</div>
-			<ul id="owner-list">
-				<li>
-					<h3>Label</h3>
-					<hr>
-				</li>
-				<li>
-					<h3>Label</h3>
-					<hr>
-				</li>
-				<li>
-					<h3>Label</h3>
-					<hr>
-				</li>
-			</ul>
-			<div class="app-settings-title-comp">
-				<h2>Locations :</h2>
-				<button type="button" class="app-settings-menu-icons-btn" aria-label="Modifier les propriétaires">
-					<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>
-				</button>
-			</div>
-			<ul id="location-list">
-				<li>
-					<h3>Label</h3>
-					<p>42 Rue de la paix, Paris (75013)</p>
-					<hr>
-				</li>	
-					<h3>Label</h3>
-					<p>42 Rue de la paix, Paris (75013)</p>
-					<hr>
-				<li>
-				</li>
-					<h3>Label</h3>
-					<p>42 Rue de la paix, Paris (75013)</p>
-					<hr>
-				</li>
-			</ul>
-			<div class="app-settings-title-comp">
-				<h2>Tags :</h2>
-				<button type="button" class="app-settings-menu-icons-btn" aria-label="Modifier les propriétaires">
-					<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>
-				</button>
-			</div>
-			<ul id="tag-list">
-				<li><p>Label</p><hr></li>
-				<li><p>Label</p><hr></li>
-				<li><p>Label</p><hr></li>
-				<li><p>Label</p><hr></li>
-				<li><p>Label</p><hr></li>
-			</ul>
-		</section>
+		<div class="settings-container">
+			<!-- Société -->
+			<section class="settings-card" aria-labelledby="heading-company">
+				<div class="settings-card-header">
+					<h2 id="heading-company">Informations de la société</h2>
+					<button type="button" class="settings-edit-btn" aria-label="Modifier les informations de la société">
+						<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>
+					</button>
+				</div>
+				<div class="settings-card-body">
+					<h3 id="app-settings-company-name" class="company-name">Company Name</h3>
+					<dl class="info-grid">
+						<div class="info-row">
+							<dt>Adresse</dt>
+							<dd id="app-settings-company-address">42 Rue de la paix, Paris (75013)</dd>
+						</div>
+						<div class="info-row">
+							<dt>Téléphone</dt>
+							<dd id="app-settings-company-tel">+33 1 23 45 67 89</dd>
+						</div>
+						<div class="info-row">
+							<dt>Courriel</dt>
+							<dd id="app-settings-company-email">company@email.com</dd>
+						</div>
+						<div class="info-row">
+							<dt>SIREN</dt>
+							<dd id="app-settings-company-siren">000 000 000</dd>
+						</div>
+					</dl>
+				</div>
+			</section>
 
+			<!-- Clients -->
+			<section class="settings-card" aria-labelledby="heading-clients">
+				<div class="settings-card-header">
+					<h2 id="heading-clients">Clients</h2>
+					<button type="button" class="settings-edit-btn" aria-label="Modifier les clients">
+						<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>
+					</button>
+				</div>
+				<ul id="client-list" class="entity-list">
+					<li class="entity-item">
+						<h3>Name</h3>
+						<p class="entity-detail">address</p>
+						<p class="entity-detail">tel</p>
+						<p class="entity-detail">mail</p>
+						<p class="entity-detail entity-siren">SIREN</p>
+					</li>
+					<li class="entity-item">
+						<h3>Name</h3>
+						<p class="entity-detail">address</p>
+						<p class="entity-detail">tel</p>
+						<p class="entity-detail">mail</p>
+						<p class="entity-detail entity-siren">SIREN</p>
+					</li>
+				</ul>
+			</section>
+
+			<!-- Propriétaires -->
+			<section class="settings-card" aria-labelledby="heading-owners">
+				<div class="settings-card-header">
+					<h2 id="heading-owners">Propriétaires</h2>
+					<button type="button" class="settings-edit-btn" aria-label="Modifier les propriétaires">
+						<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>
+					</button>
+				</div>
+				<ul id="owner-list" class="chip-list">
+					<li class="chip-item"><h3>Label</h3></li>
+					<li class="chip-item"><h3>Label</h3></li>
+					<li class="chip-item"><h3>Label</h3></li>
+				</ul>
+			</section>
+
+			<!-- Emplacements -->
+			<section class="settings-card" aria-labelledby="heading-locations">
+				<div class="settings-card-header">
+					<h2 id="heading-locations">Emplacements</h2>
+					<button type="button" class="settings-edit-btn" aria-label="Modifier les emplacements">
+						<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>
+					</button>
+				</div>
+				<ul id="location-list" class="entity-list">
+					<li class="entity-item">
+						<h3>Label</h3>
+						<p class="entity-detail">42 Rue de la paix, Paris (75013)</p>
+					</li>
+					<li class="entity-item">
+						<h3>Label</h3>
+						<p class="entity-detail">42 Rue de la paix, Paris (75013)</p>
+					</li>
+					<li class="entity-item">
+						<h3>Label</h3>
+						<p class="entity-detail">42 Rue de la paix, Paris (75013)</p>
+					</li>
+				</ul>
+			</section>
+
+			<!-- Étiquettes -->
+			<section class="settings-card" aria-labelledby="heading-tags">
+				<div class="settings-card-header">
+					<h2 id="heading-tags">Étiquettes</h2>
+					<button type="button" class="settings-edit-btn" aria-label="Modifier les étiquettes">
+						<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>
+					</button>
+				</div>
+				<ul id="tag-list" class="chip-list">
+					<li class="chip-item"><p>Label</p></li>
+					<li class="chip-item"><p>Label</p></li>
+					<li class="chip-item"><p>Label</p></li>
+					<li class="chip-item"><p>Label</p></li>
+					<li class="chip-item"><p>Label</p></li>
+				</ul>
+			</section>
+		</div>
 	</main>
 	<footer>
 		<p>| <span id="footer-company-name"></span> | <span id="footer-data"></span></p>

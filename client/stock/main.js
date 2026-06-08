@@ -292,6 +292,7 @@ async function refreshData() {
 	}
 
 	updateFooterData();
+	updateSelectTagsData();
 }
 
 function updateFooterData() {
@@ -312,6 +313,7 @@ function updateFooterData() {
 }
 
 function updateSelectTagsData() {
+	console.log(tag_list)
 	let dom = "<option value='none' selected>Aucun</option>";
 	for (let i of tag_list) {
 		const name = escapeHtml(i.label);

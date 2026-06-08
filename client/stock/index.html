@@ -47,26 +47,31 @@
 	</header>
 	<div id="element-viewer" data-opened="false" aria-hidden="true"></div>
 	<main>
-		<section id ="section-item-list" aria-label="Recherche et filtres">
-			<menu id="menu-bar-item">
-				<div id="menu-search">
-					<h2 id="search-heading">Rechercher un produit</h2>
-					<div>
-						<label class="sr-only" for="menu-search-input-search">Rechercher un produit</label>
-						<input type="search" id="menu-search-input-search" class="item-list-input" aria-labelledby="search-heading">
-						<label for="menu-search-select-tags">Étiquette :</label>
-						<select id="menu-search-select-tags" class="item-list-input">
-							<option value="none" selected disabled>Étiquette</option>
-						</select>
+		<div class="inventory-container">
+			<section class="search-card" aria-labelledby="search-heading">
+				<div class="search-card-row">
+					<div class="search-fields">
+						<h2 id="search-heading" class="sr-only">Rechercher un produit</h2>
+						<div class="search-input-wrapper">
+							<svg aria-hidden="true" class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg>
+							<label class="sr-only" for="menu-search-input-search">Rechercher un produit</label>
+							<input type="search" id="menu-search-input-search" class="item-list-input search-input" placeholder="Rechercher un produit…" aria-labelledby="search-heading">
+						</div>
+						<div class="search-select-wrapper">
+							<label for="menu-search-select-tags" class="sr-only">Filtrer par étiquette</label>
+							<select id="menu-search-select-tags" class="item-list-input">
+								<option value="none" selected disabled>Étiquette</option>
+							</select>
+						</div>
 					</div>
+					<button id="menu-bar-add-item" class="btn-add-product" type="button">
+						<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg>
+						<span>Ajouter un produit</span>
+					</button>
 				</div>
-				<div>
-					<button id="menu-bar-add-item" class="item-list-input">Ajouter un produit</button>
-				</div>
-				<hr>
-			</menu>
+			</section>
 			<ul id="product-list" aria-live="polite" aria-label="Liste des produits"></ul>
-		</section>
+		</div>
 	</main>
 	<footer>
 		<p>| <span id="footer-company-name"></span> | <span id="footer-data"></span></p>

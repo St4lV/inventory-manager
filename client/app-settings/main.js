@@ -233,23 +233,26 @@ async function displayElements() {
 		let dom = "";
 		const list_el = document.querySelector("#client-list");
 		for (let i of client_list){
-			dom+=`<li>
-					<h3>${i.name}</h3>
-					<p>${i.address}</p>
-					<p>${i.tel}</p>
-					<p>${i.email}</p>
-					<p>${i.siren}</p>
-					<hr>
+			dom+=`<li class="entity-item">
+					<h3><a href="https://annuaire-entreprises.data.gouv.fr/entreprise/${kebabize(i.name)}-${kebabize(i.siren)}" target="_blank">${i.name}</a></h3>
+					<p class="entity-detail">${i.address}</p>
+					<p class="entity-detail">${i.tel}</p>
+					<p class="entity-detail">${i.email}</p>
+					<p class="entity-detail entity-siren">${i.siren}</p>
 				</li>`
 		}
 		list_el.innerHTML=dom;
+
+		function kebabize(str) {
+			return str.toLowerCase().replaceAll(" ", "-");
+		}
 	}
 
 	function displayOwners() {
 		let dom = "";
 		const list_el = document.querySelector("#owner-list");
 		for (let i of owner_list){
-			dom+=`<li><h3>${i.label}</h3><hr></li>`
+			dom+=`<li class="chip-item"><h3>${i.label}</h3></li>`
 		}
 		list_el.innerHTML=dom;
 	}
@@ -258,7 +261,7 @@ async function displayElements() {
 		let dom = "";
 		const list_el = document.querySelector("#location-list");
 		for (let i of address_list){
-			dom+=`<li><h3>${i.label}</h3><p>${i.address}</p><hr></li>`
+			dom+=`<li class="entity-item"><h3>${i.label}</h3><p class="entity-detail">${i.address}</p></li>`
 		}
 		list_el.innerHTML=dom;
 	}
@@ -267,7 +270,7 @@ async function displayElements() {
 		let dom = "";
 		const list_el = document.querySelector("#tag-list");
 		for (let i of tag_list){
-			dom+=`<li><p>${i.label}</p><hr></li>`
+			dom+=`<li class="chip-item"><p>${i.label}</p></li>`
 		}
 		list_el.innerHTML=dom;
 	}
