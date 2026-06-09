@@ -1,6 +1,6 @@
 {
   "name": "inventory-manager",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "",
   "main": "server.js",
   "scripts": {

@@ -34,7 +34,8 @@ router.put("/", async (req, res) => {
 			const result = await pool.query(query, [new_name, new_email, new_tel, new_siren, new_address]);
 			return { code: 200, data: "OK" };
 		} catch (error) {
-			return { code: 500, data: error };
+			log.error(error)
+			return { code: 500, data: "Internal server error" };
 		}
 	}
 	
