@@ -29,7 +29,7 @@ router.put("/", async (req, res) => {
 			return { code: 400, data: "Error : No fields should be empty" }
 		}
 	
-		const query = "UPDATE inventory.company_data SET name = $1, email = $2, tel = $3, siren = $4 WHERE id = 1;";
+		const query = "UPDATE inventory.company_data SET name = $1, email = $2, tel = $3, siren = $4, address = $5 WHERE id = 1;";
 		try {
 			const result = await pool.query(query, [new_name, new_email, new_tel, new_siren, new_address]);
 			return { code: 200, data: "OK" };
