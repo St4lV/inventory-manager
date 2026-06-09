@@ -12,6 +12,8 @@
 	--color-item-hover: rgba(255, 255, 255, 0.04);
 	--color-viewer-overlay: rgba(17, 17, 19, 0.85);
 	--color-divider: #2a2a2e;
+	--color-danger: #e57368;
+	--color-danger-bg: #c0392b;
 	--transition-base: 0.2s ease;
 	--header-height: 85px;
 	--radius-card: 12px;
@@ -100,6 +102,11 @@ footer {
 
 .flex {
 	display: flex;
+}
+
+fieldset{
+	display: flex;
+	flex-direction: column;
 }
 
 /* ── Conteneur de réglages ── */
@@ -577,4 +584,118 @@ textarea {
 .btn-modal:focus-visible {
 	outline: 2px solid var(--color-accent);
 	outline-offset: 2px;
+}
+
+/* ── Formulaires dans la visionneuse ── */
+
+.settings-form-section {
+	border: 1px solid var(--color-card-border);
+	border-radius: var(--radius-card);
+	padding: 14px 16px 18px;
+	margin-bottom: 14px;
+}
+
+.settings-form-section-title {
+	font-size: 0.75rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--color-text-muted);
+	margin-bottom: 12px;
+}
+
+fieldset {
+	border: none;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.settings-form-field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	margin-bottom: 12px;
+}
+
+.settings-form-field label {
+	font-size: 0.82rem;
+	font-weight: 500;
+	color: var(--color-text-muted);
+}
+
+.settings-form-field input,
+.settings-form-field textarea,
+.settings-form-field select {
+	padding: 8px 12px;
+	border-radius: var(--radius-btn);
+	border: 1px solid var(--color-card-border);
+	background-color: var(--color-bg);
+	color: var(--color-text);
+	font-size: 0.875rem;
+	transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.settings-form-field input:hover,
+.settings-form-field textarea:hover,
+.settings-form-field select:hover {
+	border-color: #3a3a40;
+}
+
+.settings-form-field input:focus-visible,
+.settings-form-field textarea:focus-visible,
+.settings-form-field select:focus-visible {
+	outline: none;
+	border-color: var(--color-accent);
+	box-shadow: 0 0 0 3px var(--color-accent-subtle);
+}
+
+.settings-form-field input::placeholder,
+.settings-form-field textarea::placeholder {
+	color: #555;
+}
+
+.viewer-divider {
+	border: none;
+	border-top: 1px solid var(--color-divider);
+	margin: 16px 0;
+}
+
+.btn-supprimer {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	margin-top: 8px;
+	margin-bottom: 20px;
+	padding: 8px 16px;
+	background: none;
+	border: 1px solid rgba(192, 57, 43, 0.4);
+	color: #e57368;
+	border-radius: var(--radius-btn);
+	cursor: pointer;
+	font-size: 0.875rem;
+	font-weight: 500;
+	transition: background-color var(--transition-base), color var(--transition-base), border-color var(--transition-base), transform var(--transition-base);
+}
+
+.btn-supprimer:hover {
+	background-color: #c0392b;
+	border-color: #c0392b;
+	color: #ffffff;
+	transform: scale(1.02);
+}
+
+.btn-supprimer:active {
+	transform: scale(0.96);
+}
+
+.btn-supprimer:focus-visible {
+	outline: 2px solid #e57368;
+	outline-offset: 2px;
+}
+
+.btn-supprimer svg {
+	height: 14px;
+	width: 14px;
+	pointer-events: none;
 }

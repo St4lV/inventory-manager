@@ -331,27 +331,21 @@ function displayElementViewer(mode = "item", data = {}) {
 		case "edit-client":
 			editClientMode(data.siren);
 			break;
-		
 		case "new-owner":
 			newOwnerMode();
 			break;
-
 		case "edit-owner":
 			editOwnerMode(data.label)
 			break;
-	
 		case "new-location":
 			newLocationMode();
 			break;
-	
 		case "edit-location":
 			editLocationMode(data.address)
 			break;
-	
 		case "new-tag":
 			newTagMode();
 			break;
-	
 		case "edit-tag":
 			editTagMode(data.label);
 			break;
@@ -371,9 +365,39 @@ function displayElementViewer(mode = "item", data = {}) {
 		}
 	}
 
+	function showDeleteModal(message, onConfirm) {
+		const dialog = document.createElement('dialog');
+		dialog.id = 'modal-confirmation';
+		dialog.innerHTML = `
+			<p>${escapeHtml(message)}</p>
+			<menu>
+				<button type="button" class="btn-modal btn-modal-annuler" id="modal-cancel">Annuler</button>
+				<button type="button" class="btn-modal btn-modal-supprimer" id="modal-delete">Supprimer</button>
+			</menu>
+		`;
+		document.body.appendChild(dialog);
+		dialog.showModal();
+
+		dialog.querySelector('#modal-cancel').addEventListener('click', () => {
+			dialog.close();
+			dialog.remove();
+		});
+		dialog.querySelector('#modal-delete').addEventListener('click', async () => {
+			dialog.close();
+			dialog.remove();
+			await onConfirm();
+		});
+		dialog.addEventListener('close', () => { if (document.body.contains(dialog)) dialog.remove(); });
+	}
+
+	function bindCloseAndConfirm(onConfirm) {
+		document.querySelector("#element-viewer-close").addEventListener("click", () => closeViewer());
+		document.querySelector("#element-viewer-confirm").addEventListener("click", onConfirm);
+	}
+
 	function editCompanyDataMode() {
-		loaded=true;
-		let dom =`
+		loaded = true;
+		element_viewer.innerHTML = `
 		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
 			<div id="element-viewer-item-top-bar-holder">
 				<h2 id="viewer-title">Éditer les informations de la société</h2>
@@ -382,25 +406,51 @@ function displayElementViewer(mode = "item", data = {}) {
 					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
 				</menu>
 			</div>
-			<hr>
+			<hr class="viewer-divider">
+			<fieldset>
+				<legend class="sr-only">Informations de la société</legend>
+				<div class="settings-form-field">
+					<label for="edit-company-name">Nom de la structure</label>
+					<input type="text" id="edit-company-name" value="${escapeHtml(company_data.name)}" placeholder="Nom de la structure" autocomplete="organization">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-company-address">Adresse</label>
+					<input type="text" id="edit-company-address" value="${escapeHtml(company_data.address)}" placeholder="42 rue de la Paix, Paris (75000)" autocomplete="street-address">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-company-tel">Téléphone</label>
+					<input type="tel" id="edit-company-tel" value="${escapeHtml(company_data.tel)}" placeholder="+33 1 23 45 67 89" autocomplete="tel">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-company-email">Courriel</label>
+					<input type="email" id="edit-company-email" value="${escapeHtml(company_data.email)}" placeholder="contact@structure.com" autocomplete="email">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-company-siren">SIREN</label>
+					<input type="text" id="edit-company-siren" value="${escapeHtml(company_data.siren)}" placeholder="000 000 000" inputmode="numeric" pattern="[0-9\\s]{9,11}" autocomplete="off">
+				</div>
+			</fieldset>
 		</div>
-		` 
-		element_viewer.innerHTML = dom;
-		bindElementsActions();
+		`;
 
-		function bindElementsActions() {
-			const close_viewer = document.querySelector("#element-viewer-close");
-			close_viewer.addEventListener("click", () => closeViewer());
-			const confirm_edit = document.querySelector("#element-viewer-confirm");
-			confirm_edit.addEventListener("click", async () => {
-
-			});
-		}
+		bindCloseAndConfirm(async () => {
+			const body = {
+				new_name: document.getElementById('edit-company-name').value,
+				new_address: document.getElementById('edit-company-address').value,
+				new_tel: document.getElementById('edit-company-tel').value,
+				new_email: document.getElementById('edit-company-email').value,
+				new_siren: document.getElementById('edit-company-siren').value,
+			};
+			await HTTPRequest.put('/api/v1/company/', body);
+			closeViewer();
+			await refreshData();
+			await displayElements();
+		});
 	}
 
 	function newClientMode() {
-		loaded=true;
-		let dom =`
+		loaded = true;
+		element_viewer.innerHTML = `
 		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
 			<div id="element-viewer-item-top-bar-holder">
 				<h2 id="viewer-title">Nouveau client</h2>
@@ -409,24 +459,49 @@ function displayElementViewer(mode = "item", data = {}) {
 					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
 				</menu>
 			</div>
-			<hr>
+			<hr class="viewer-divider">
+			<fieldset>
+				<legend class="sr-only">Informations du client</legend>
+				<div class="settings-form-field">
+					<label for="edit-client-name">Nom</label>
+					<input type="text" id="edit-client-name" placeholder="Nom du client">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-client-address">Adresse</label>
+					<input type="text" id="edit-client-address" placeholder="Adresse du client">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-client-tel">Téléphone</label>
+					<input type="tel" id="edit-client-tel" placeholder="+33 1 23 45 67 89">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-client-email">Courriel</label>
+					<input type="email" id="edit-client-email" placeholder="contact@client.com">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-client-siren">SIREN</label>
+					<input type="text" id="edit-client-siren" placeholder="000 000 000" inputmode="numeric">
+				</div>
+			</fieldset>
 		</div>
-		` 
-		element_viewer.innerHTML = dom;
-		bindElementsActions();
+		`;
 
-		function bindElementsActions() {
-			const close_viewer = document.querySelector("#element-viewer-close");
-			close_viewer.addEventListener("click", () => closeViewer());
-			const confirm_edit = document.querySelector("#element-viewer-confirm");
-			confirm_edit.addEventListener("click", async () => {
-
-			});
-		}
+		bindCloseAndConfirm(async () => {
+			const body = {
+				name: document.getElementById('edit-client-name').value,
+				address: document.getElementById('edit-client-address').value,
+				tel: document.getElementById('edit-client-tel').value,
+				email: document.getElementById('edit-client-email').value,
+				siren: document.getElementById('edit-client-siren').value,
+			};
+			await HTTPRequest.post('/api/v1/client/', body);
+			closeViewer();
+			await refreshData();
+			await displayElements();
+		});
 	}
 
 	function editClientMode(ref) {
-		
 		let selected_client = {};
 		for (let i of client_list) {
 			if (i.siren === ref) {
@@ -437,7 +512,7 @@ function displayElementViewer(mode = "item", data = {}) {
 		}
 		if (!loaded) return;
 
-		let dom =`
+		element_viewer.innerHTML = `
 		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
 			<div id="element-viewer-item-top-bar-holder">
 				<h2 id="viewer-title">Éditer ${escapeHtml(selected_client.name)}</h2>
@@ -446,25 +521,75 @@ function displayElementViewer(mode = "item", data = {}) {
 					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
 				</menu>
 			</div>
-			<hr>
+			<hr class="viewer-divider">
+			<fieldset>
+				<legend class="sr-only">Modifier le client</legend>
+				<div class="settings-form-field">
+					<label for="edit-client-name">Nom</label>
+					<input type="text" id="edit-client-name" value="${escapeHtml(selected_client.name)}">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-client-address">Adresse</label>
+					<input type="text" id="edit-client-address" value="${escapeHtml(selected_client.address)}">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-client-tel">Téléphone</label>
+					<input type="tel" id="edit-client-tel" value="${escapeHtml(selected_client.tel)}">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-client-email">Courriel</label>
+					<input type="email" id="edit-client-email" value="${escapeHtml(selected_client.email)}">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-client-siren">SIREN</label>
+					<input type="text" id="edit-client-siren" value="${escapeHtml(selected_client.siren)}" inputmode="numeric">
+				</div>
+			</fieldset>
+			<hr class="viewer-divider">
+			<button type="button" class="btn-supprimer" id="btn-delete-client" aria-label="Supprimer le client ${escapeHtml(selected_client.name)}">
+				${svg.delete} Supprimer le client
+			</button>
 		</div>
-		` 
-		element_viewer.innerHTML = dom;
-		bindElementsActions();
+		`;
 
-		function bindElementsActions() {
-			const close_viewer = document.querySelector("#element-viewer-close");
-			close_viewer.addEventListener("click", () => closeViewer());
-			const confirm_edit = document.querySelector("#element-viewer-confirm");
-			confirm_edit.addEventListener("click", async () => {
+		bindCloseAndConfirm(async () => {
+			const body = {
+				name: selected_client.name,
+				address: selected_client.address,
+				tel: selected_client.tel,
+				email: selected_client.email,
+				siren: selected_client.siren,
+				new_name: document.getElementById('edit-client-name').value,
+				new_address: document.getElementById('edit-client-address').value,
+				new_tel: document.getElementById('edit-client-tel').value,
+				new_email: document.getElementById('edit-client-email').value,
+				new_siren: document.getElementById('edit-client-siren').value,
+			};
+			await HTTPRequest.put('/api/v1/client/', body);
+			closeViewer();
+			await refreshData();
+			await displayElements();
+		});
 
+		document.getElementById('btn-delete-client').addEventListener('click', () => {
+			showDeleteModal(`Supprimer le client « ${selected_client.name} » ? Cette action est irréversible.`, async () => {
+				await HTTPRequest.delete('/api/v1/client/', {
+					name: selected_client.name,
+					address: selected_client.address,
+					tel: selected_client.tel,
+					email: selected_client.email,
+					siren: selected_client.siren,
+				});
+				closeViewer();
+				await refreshData();
+				await displayElements();
 			});
-		}
+		});
 	}
 
 	function newOwnerMode() {
-		loaded=true;
-		let dom =`
+		loaded = true;
+		element_viewer.innerHTML = `
 		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
 			<div id="element-viewer-item-top-bar-holder">
 				<h2 id="viewer-title">Nouveau propriétaire</h2>
@@ -473,24 +598,28 @@ function displayElementViewer(mode = "item", data = {}) {
 					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
 				</menu>
 			</div>
-			<hr>
+			<hr class="viewer-divider">
+			<fieldset>
+				<legend class="sr-only">Nouveau propriétaire</legend>
+				<div class="settings-form-field">
+					<label for="edit-owner-label">Libellé</label>
+					<input type="text" id="edit-owner-label" placeholder="Nom du propriétaire">
+				</div>
+			</fieldset>
 		</div>
-		` 
-		element_viewer.innerHTML = dom;
-		bindElementsActions();
+		`;
 
-		function bindElementsActions() {
-			const close_viewer = document.querySelector("#element-viewer-close");
-			close_viewer.addEventListener("click", () => closeViewer());
-			const confirm_edit = document.querySelector("#element-viewer-confirm");
-			confirm_edit.addEventListener("click", async () => {
-
+		bindCloseAndConfirm(async () => {
+			await HTTPRequest.post('/api/v1/owner/', {
+				label: document.getElementById('edit-owner-label').value,
 			});
-		}
+			closeViewer();
+			await refreshData();
+			await displayElements();
+		});
 	}
 
 	function editOwnerMode(ref) {
-		
 		let selected_owner = {};
 		for (let i of owner_list) {
 			if (i.label === ref) {
@@ -501,7 +630,7 @@ function displayElementViewer(mode = "item", data = {}) {
 		}
 		if (!loaded) return;
 
-		let dom =`
+		element_viewer.innerHTML = `
 		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
 			<div id="element-viewer-item-top-bar-holder">
 				<h2 id="viewer-title">Éditer ${escapeHtml(selected_owner.label)}</h2>
@@ -510,25 +639,44 @@ function displayElementViewer(mode = "item", data = {}) {
 					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
 				</menu>
 			</div>
-			<hr>
+			<hr class="viewer-divider">
+			<fieldset>
+				<legend class="sr-only">Modifier le propriétaire</legend>
+				<div class="settings-form-field">
+					<label for="edit-owner-label">Libellé</label>
+					<input type="text" id="edit-owner-label" value="${escapeHtml(selected_owner.label)}">
+				</div>
+			</fieldset>
+			<hr class="viewer-divider">
+			<button type="button" class="btn-supprimer" id="btn-delete-owner" aria-label="Supprimer le propriétaire ${escapeHtml(selected_owner.label)}">
+				${svg.delete} Supprimer le propriétaire
+			</button>
 		</div>
-		` 
-		element_viewer.innerHTML = dom;
-		bindElementsActions();
+		`;
 
-		function bindElementsActions() {
-			const close_viewer = document.querySelector("#element-viewer-close");
-			close_viewer.addEventListener("click", () => closeViewer());
-			const confirm_edit = document.querySelector("#element-viewer-confirm");
-			confirm_edit.addEventListener("click", async () => {
-
+		bindCloseAndConfirm(async () => {
+			await HTTPRequest.put('/api/v1/owner/', {
+				label: selected_owner.label,
+				new_label: document.getElementById('edit-owner-label').value,
 			});
-		}
+			closeViewer();
+			await refreshData();
+			await displayElements();
+		});
+
+		document.getElementById('btn-delete-owner').addEventListener('click', () => {
+			showDeleteModal(`Supprimer le propriétaire « ${selected_owner.label} » ?`, async () => {
+				await HTTPRequest.delete(`/api/v1/owner/?label=${encodeURIComponent(selected_owner.label)}`);
+				closeViewer();
+				await refreshData();
+				await displayElements();
+			});
+		});
 	}
 
 	function newLocationMode() {
-		loaded=true;
-		let dom =`
+		loaded = true;
+		element_viewer.innerHTML = `
 		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
 			<div id="element-viewer-item-top-bar-holder">
 				<h2 id="viewer-title">Nouvel emplacement</h2>
@@ -537,24 +685,33 @@ function displayElementViewer(mode = "item", data = {}) {
 					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
 				</menu>
 			</div>
-			<hr>
+			<hr class="viewer-divider">
+			<fieldset>
+				<legend class="sr-only">Nouvel emplacement</legend>
+				<div class="settings-form-field">
+					<label for="edit-location-label">Libellé</label>
+					<input type="text" id="edit-location-label" placeholder="Bureau, Entrepôt…">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-location-address">Adresse</label>
+					<input type="text" id="edit-location-address" placeholder="42 rue de la Paix, Paris (75000)">
+				</div>
+			</fieldset>
 		</div>
-		` 
-		element_viewer.innerHTML = dom;
-		bindElementsActions();
+		`;
 
-		function bindElementsActions() {
-			const close_viewer = document.querySelector("#element-viewer-close");
-			close_viewer.addEventListener("click", () => closeViewer());
-			const confirm_edit = document.querySelector("#element-viewer-confirm");
-			confirm_edit.addEventListener("click", async () => {
-
+		bindCloseAndConfirm(async () => {
+			await HTTPRequest.post('/api/v1/location/', {
+				label: document.getElementById('edit-location-label').value,
+				address: document.getElementById('edit-location-address').value,
 			});
-		}
+			closeViewer();
+			await refreshData();
+			await displayElements();
+		});
 	}
 
 	function editLocationMode(ref) {
-		
 		let selected_location = {};
 		for (let i of address_list) {
 			if (i.address === ref) {
@@ -565,7 +722,7 @@ function displayElementViewer(mode = "item", data = {}) {
 		}
 		if (!loaded) return;
 
-		let dom =`
+		element_viewer.innerHTML = `
 		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
 			<div id="element-viewer-item-top-bar-holder">
 				<h2 id="viewer-title">Éditer ${escapeHtml(selected_location.label)}</h2>
@@ -574,25 +731,50 @@ function displayElementViewer(mode = "item", data = {}) {
 					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
 				</menu>
 			</div>
-			<hr>
+			<hr class="viewer-divider">
+			<fieldset>
+				<legend class="sr-only">Modifier l'emplacement</legend>
+				<div class="settings-form-field">
+					<label for="edit-location-label">Libellé</label>
+					<input type="text" id="edit-location-label" value="${escapeHtml(selected_location.label)}">
+				</div>
+				<div class="settings-form-field">
+					<label for="edit-location-address">Adresse</label>
+					<input type="text" id="edit-location-address" value="${escapeHtml(selected_location.address)}">
+				</div>
+			</fieldset>
+			<hr class="viewer-divider">
+			<button type="button" class="btn-supprimer" id="btn-delete-location" aria-label="Supprimer l'emplacement ${escapeHtml(selected_location.label)}">
+				${svg.delete} Supprimer l'emplacement
+			</button>
 		</div>
-		` 
-		element_viewer.innerHTML = dom;
-		bindElementsActions();
+		`;
 
-		function bindElementsActions() {
-			const close_viewer = document.querySelector("#element-viewer-close");
-			close_viewer.addEventListener("click", () => closeViewer());
-			const confirm_edit = document.querySelector("#element-viewer-confirm");
-			confirm_edit.addEventListener("click", async () => {
-
+		bindCloseAndConfirm(async () => {
+			await HTTPRequest.put('/api/v1/location/', {
+				label: selected_location.label,
+				address: selected_location.address,
+				new_label: document.getElementById('edit-location-label').value,
+				new_address: document.getElementById('edit-location-address').value,
 			});
-		}
+			closeViewer();
+			await refreshData();
+			await displayElements();
+		});
+
+		document.getElementById('btn-delete-location').addEventListener('click', () => {
+			showDeleteModal(`Supprimer l'emplacement « ${selected_location.label} » ?`, async () => {
+				await HTTPRequest.delete(`/api/v1/location/?label=${encodeURIComponent(selected_location.label)}&address=${encodeURIComponent(selected_location.address)}`);
+				closeViewer();
+				await refreshData();
+				await displayElements();
+			});
+		});
 	}
 
 	function newTagMode() {
-		loaded=true;
-		let dom =`
+		loaded = true;
+		element_viewer.innerHTML = `
 		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
 			<div id="element-viewer-item-top-bar-holder">
 				<h2 id="viewer-title">Nouvelle étiquette</h2>
@@ -601,24 +783,28 @@ function displayElementViewer(mode = "item", data = {}) {
 					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
 				</menu>
 			</div>
-			<hr>
+			<hr class="viewer-divider">
+			<fieldset>
+				<legend class="sr-only">Nouvelle étiquette</legend>
+				<div class="settings-form-field">
+					<label for="edit-tag-label">Libellé</label>
+					<input type="text" id="edit-tag-label" placeholder="Nom de l'étiquette">
+				</div>
+			</fieldset>
 		</div>
-		` 
-		element_viewer.innerHTML = dom;
-		bindElementsActions();
+		`;
 
-		function bindElementsActions() {
-			const close_viewer = document.querySelector("#element-viewer-close");
-			close_viewer.addEventListener("click", () => closeViewer());
-			const confirm_edit = document.querySelector("#element-viewer-confirm");
-			confirm_edit.addEventListener("click", async () => {
-
+		bindCloseAndConfirm(async () => {
+			await HTTPRequest.post('/api/v1/tag/', {
+				label: document.getElementById('edit-tag-label').value,
 			});
-		}
+			closeViewer();
+			await refreshData();
+			await displayElements();
+		});
 	}
 
 	function editTagMode(ref) {
-		
 		let selected_tag = {};
 		for (let i of tag_list) {
 			if (i.label === ref) {
@@ -629,7 +815,7 @@ function displayElementViewer(mode = "item", data = {}) {
 		}
 		if (!loaded) return;
 
-		let dom =`
+		element_viewer.innerHTML = `
 		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
 			<div id="element-viewer-item-top-bar-holder">
 				<h2 id="viewer-title">Éditer ${escapeHtml(selected_tag.label)}</h2>
@@ -638,20 +824,39 @@ function displayElementViewer(mode = "item", data = {}) {
 					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
 				</menu>
 			</div>
-			<hr>
+			<hr class="viewer-divider">
+			<fieldset>
+				<legend class="sr-only">Modifier l'étiquette</legend>
+				<div class="settings-form-field">
+					<label for="edit-tag-label">Libellé</label>
+					<input type="text" id="edit-tag-label" value="${escapeHtml(selected_tag.label)}">
+				</div>
+			</fieldset>
+			<hr class="viewer-divider">
+			<button type="button" class="btn-supprimer" id="btn-delete-tag" aria-label="Supprimer l'étiquette ${escapeHtml(selected_tag.label)}">
+				${svg.delete} Supprimer l'étiquette
+			</button>
 		</div>
-		` 
-		element_viewer.innerHTML = dom;
-		bindElementsActions();
+		`;
 
-		function bindElementsActions() {
-			const close_viewer = document.querySelector("#element-viewer-close");
-			close_viewer.addEventListener("click", () => closeViewer());
-			const confirm_edit = document.querySelector("#element-viewer-confirm");
-			confirm_edit.addEventListener("click", async () => {
-
+		bindCloseAndConfirm(async () => {
+			await HTTPRequest.put('/api/v1/tag/', {
+				label: selected_tag.label,
+				new_label: document.getElementById('edit-tag-label').value,
 			});
-		}
+			closeViewer();
+			await refreshData();
+			await displayElements();
+		});
+
+		document.getElementById('btn-delete-tag').addEventListener('click', () => {
+			showDeleteModal(`Supprimer l'étiquette « ${selected_tag.label} » ?`, async () => {
+				await HTTPRequest.delete(`/api/v1/tag/?label=${encodeURIComponent(selected_tag.label)}`);
+				closeViewer();
+				await refreshData();
+				await displayElements();
+			});
+		});
 	}
 }
 
