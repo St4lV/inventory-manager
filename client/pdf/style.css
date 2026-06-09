@@ -117,3 +117,14 @@ section {
 		margin-left: 6%;
 	}
 }
+
+footer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+footer a {
+	color: var(--color-text);
+}

@@ -314,6 +314,21 @@ async function displayElements() {
 			});
 		}
 	}
+	
+	await displayFooterData();
+}
+
+async function displayFooterData() {
+	const request = new HTTPRequest("/api");
+	const result = await request.get();
+	if (result.status !== 200){
+		return
+	}
+	const app_data = result.data;
+	const dom =`<p>App made by <a href="https://github.com/${app_data.dev}" target="_blank">St4lv</a> | ${app_data.app}@${app_data.version} | ${app_data.license} License</p>`;
+	
+	const footer = document.querySelector("footer");
+	footer.innerHTML = dom;
 }
 
 function displayElementViewer(mode = "item", data = {}) {

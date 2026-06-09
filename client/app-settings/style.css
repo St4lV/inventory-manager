@@ -699,3 +699,14 @@ fieldset {
 	width: 14px;
 	pointer-events: none;
 }
+
+footer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+footer a {
+	color: var(--color-text);
+}

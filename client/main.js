@@ -581,6 +581,21 @@ async function displayElements() {
 	displayGraphDonut(countSplitterDonut(stock_list), "location_data.label", "#donut2");
 	displayGraphDonut(countSplitterDonut(stock_list), "condition_data.label", "#donut3", ["#34d399", "#fbbf24", "#f97316", "#ef4444", "#3b82f6"]);
 	displayGraphDonut(countSplitterDonut(stock_list), "owner_data.label", "#donut4");
+	
+	await displayFooterData();
+}
+
+async function displayFooterData() {
+	const request = new HTTPRequest("/api");
+	const result = await request.get();
+	if (result.status !== 200){
+		return
+	}
+	const app_data = result.data;
+	const dom =`<p>App made by <a href="https://github.com/${app_data.dev}" target="_blank">St4lv</a> | ${app_data.app}@${app_data.version} | ${app_data.license} License</p>`;
+	
+	const footer = document.querySelector("footer");
+	footer.innerHTML = dom;
 }
 
 (async () => {

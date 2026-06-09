@@ -434,3 +434,14 @@ a {
 .apexcharts-gridline {
 	stroke: var(--color-divider) !important;
 }
+
+footer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+footer a {
+	color: var(--color-text);
+}
