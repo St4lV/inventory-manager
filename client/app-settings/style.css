@@ -281,6 +281,7 @@ footer {
 	border-radius: var(--radius-chip);
 	padding: 6px 14px;
 	transition: background-color var(--transition-base), transform var(--transition-base);
+	cursor: pointer;
 }
 
 .chip-item:hover {
@@ -307,6 +308,105 @@ a {
 	color: var(--color-text);
 }
 
+.edit-element-container{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+/* ===========================
+   Panneau de détail (visionneuse)
+   =========================== */
+#element-viewer[data-opened="false"] {
+	display: none;
+}
+
+#element-viewer[data-opened="true"] {
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-color: var(--color-viewer-overlay);
+	z-index: 100;
+	overflow: hidden;
+	padding-top: 10px;
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
+}
+
+#element-viewer-content {
+	background-color: var(--color-bg);
+	padding: 0 5%;
+	overflow-y: auto;
+	height: 100%;
+	width: 100%;
+	outline: none;
+}
+
+#element-viewer-item-top-bar-holder {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 12px 0;
+}
+
+#element-viewer-item-menu {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+	list-style: none;
+}
+
+.element-viewer-menu-icons-btn {
+	height: 40px;
+	width: 40px;
+	padding: 0;
+	cursor: pointer;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	background: rgba(255, 255, 255, 0.06);
+	border: none;
+	color: var(--color-text);
+	border-radius: var(--radius-btn);
+	transition: background-color var(--transition-base), color var(--transition-base), transform var(--transition-base);
+}
+
+.element-viewer-menu-icons-btn:hover {
+	background-color: rgba(255, 255, 255, 0.12);
+	transform: scale(1.05);
+}
+
+.element-viewer-menu-icons-btn:active {
+	transform: scale(0.95);
+}
+
+.element-viewer-menu-icons-btn:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
+}
+
+.element-viewer-menu-icons-btn svg {
+	height: 18px;
+	width: 18px;
+	pointer-events: none;
+}
+
+#element-viewer-item-data-display {
+	display: flex;
+	flex-direction: column;
+}
+
+.edit-viewer-input {
+	width: 80%;
+}
+
+#element-viewer-add-stock {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
 
 @media (min-width: 1100px) {
 
@@ -316,34 +416,165 @@ a {
 	}
 
 	main {
-		padding: 40px 32px;
+		padding: 32px 40px;
 	}
 
-	#menu-bar-item {
-		margin-left: 6%;
+	#element-viewer[data-opened="true"] {
+		top: var(--header-height);
+		padding-top: 0;
+		height: calc(100% - var(--header-height));
 	}
 
-	.settings-container {
-		gap: 24px;
+	#element-viewer-content {
+		padding: 0 3%;
+		width: 75%;
+		max-width: 1000px;
+		margin: 0 auto;
 	}
 
-	.settings-card-header {
-		padding: 18px 24px;
+	#element-viewer-item-data-display {
+		flex-direction: row;
 	}
 
-	.settings-card-body {
-		padding: 24px;
+	.product-list-product-img-container {
+		height: 300px;
+		border-radius: 5px;
 	}
 
-	.entity-item {
-		padding: 18px 24px;
+	.product-list-product-img {
+		min-height: 250px;
+		min-width : 250px;
+		max-height: 300px;
+		max-width : 100%;
+		border-radius: 5px;
 	}
 
-	.chip-list {
-		padding: 18px 24px;
+	#element-viewer-item-data-display .product-list-product-img-container,
+	#element-viewer-item-data-display .product-list-product-img-container .product-list-product-img {
+		border-radius: var(--radius-card);
 	}
 
-	.info-row dt {
-		width: 120px;
+	.edit-viewer-h2 {
+		font-size: 24px;
+		font-weight: bold;
 	}
+
+	.edit-viewer-h3 {
+		font-size: 20px;
+		font-weight: bold;
+	}
+}
+
+textarea {
+	width: 100%;
+	resize: none;
+}
+
+.element-viewer-menu-stock-list-edit-title-comp {
+	display: flex;
+	align-items: center;
+}
+
+.element-viewer-menu-icons-btn-edit-stock {
+	height: 30px;
+	width: 30px;
+	padding: 0;
+	cursor: pointer;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	background: var(--color-accent-subtle);
+	border: none;
+	color: var(--color-accent);
+	border-radius: var(--radius-btn);
+	transition: background-color var(--transition-base), color var(--transition-base), transform var(--transition-base);
+}
+
+.element-viewer-menu-icons-btn-edit-stock:hover {
+	background-color: rgba(59, 130, 246, 0.22);
+	transform: scale(1.08);
+}
+
+.element-viewer-menu-icons-btn-edit-stock:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
+}
+
+.element-viewer-menu-icons-btn-edit-stock svg {
+	height: 13px;
+	width: 13px;
+	pointer-events: none;
+}
+
+#modal-confirmation {
+	background-color: var(--color-card);
+	color: var(--color-text);
+	border: 1px solid var(--color-card-border);
+	border-radius: var(--radius-card);
+	padding: 24px;
+	max-width: 420px;
+	width: 90%;
+	z-index: 200;
+	justify-self: center;
+	margin-top: 15%;
+	box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+}
+
+#modal-confirmation::backdrop {
+	background-color: rgba(0, 0, 0, 0.8);
+	backdrop-filter: blur(4px);
+}
+
+#modal-confirmation p {
+	margin-bottom: 20px;
+	font-size: 1rem;
+	line-height: 1.5;
+}
+
+#modal-confirmation menu {
+	display: flex;
+	gap: 10px;
+	justify-content: flex-end;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.btn-modal {
+	padding: 8px 18px;
+	border-radius: var(--radius-btn);
+	border: 1px solid var(--color-card-border);
+	cursor: pointer;
+	font-size: 0.875rem;
+	font-weight: 500;
+	transition: background-color var(--transition-base), color var(--transition-base), transform var(--transition-base);
+}
+
+.btn-modal-annuler {
+	background-color: transparent;
+	color: var(--color-text);
+}
+
+.btn-modal-annuler:hover {
+	background-color: rgba(255, 255, 255, 0.08);
+}
+
+.btn-modal-supprimer {
+	background-color: var(--color-danger-bg);
+	color: #ffffff;
+	border-color: var(--color-danger-bg);
+}
+
+.btn-modal-supprimer:hover {
+	background-color: #a93226;
+	border-color: #a93226;
+}
+
+.btn-modal:active {
+	transform: scale(0.96);
+}
+
+.btn-modal:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
 }

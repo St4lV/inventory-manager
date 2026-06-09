@@ -87,46 +87,71 @@ let owner_list = [];
 let client_list = [];
 let company_data = {};
 
-function displayElementViewer(mode = "item", data = {}) {
-	prevFocusedElement = document.activeElement;
-	let dom = '';
-	let loaded = false;
+let prevFocusedElement = null;
 
-	switch (mode) {
-		case "item":
-			itemMode(data.reference);
-			break;
-		case "new-item":
-			newItemMode();
-			break;
-		case "edit-item":
-			editItemMode(data.reference);
-			break;
-		case "new-stock":
-			newStockMode(data.reference);
-			break;
-		case "edit-stock":
-			editStockMode(data.reference, data.stock)
-			break;
+function trapFocus(container) {
+	const focusableSelectors = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+	function handleKeydown(e) {
+		if (e.key === 'Escape') {
+			closeViewer();
+			return;
+		}
+		if (e.key !== 'Tab') return;
+
+		const focusable = Array.from(container.querySelectorAll(focusableSelectors))
+			.filter(el => el.offsetParent !== null);
+
+		if (focusable.length === 0) return;
+
+		const first = focusable[0];
+		const last = focusable[focusable.length - 1];
+
+		if (e.shiftKey) {
+			if (document.activeElement === first) {
+				e.preventDefault();
+				last.focus();
+			}
+		} else {
+			if (document.activeElement === last) {
+				e.preventDefault();
+				first.focus();
+			}
+		}
 	}
 
-	if (loaded) {
-		element_viewer.dataset.opened = "true";
-		element_viewer.setAttribute('aria-hidden', 'false');
-		document.body.classList.add('viewer-opened');
-		document.querySelector('main').setAttribute('aria-hidden', 'true');
-		document.querySelector('header').setAttribute('aria-hidden', 'true');
-		document.querySelector('footer').setAttribute('aria-hidden', 'true');
-		const content = document.getElementById('element-viewer-content');
-		if (content) {
-			content.focus();
-			trapFocus(content);
-		}
+	container.addEventListener('keydown', handleKeydown);
+}
+
+function closeViewer() {
+	element_viewer.dataset.opened = "false";
+	element_viewer.setAttribute('aria-hidden', 'true');
+	element_viewer.innerHTML = "";
+	document.body.classList.remove('viewer-opened');
+	document.querySelector('main').removeAttribute('aria-hidden');
+	document.querySelector('header').removeAttribute('aria-hidden');
+	document.querySelector('footer').removeAttribute('aria-hidden');
+	if (prevFocusedElement) {
+		prevFocusedElement.focus();
+		prevFocusedElement = null;
 	}
 }
 
 async function bindActions() {
+	const edit_company_btn = document.querySelector("#edit-company-data-btn");
+	edit_company_btn.addEventListener("click",()=>{displayElementViewer("edit-company-data")});
 
+	const new_client_btn = document.querySelector("#new-client-btn");
+	new_client_btn.addEventListener("click",()=>{displayElementViewer("new-client")});
+
+	const new_owner_btn = document.querySelector("#new-owner-btn");
+	new_owner_btn.addEventListener("click",()=>{displayElementViewer("new-owner")});
+
+	const new_location_btn = document.querySelector("#new-location-btn");
+	new_location_btn.addEventListener("click",()=>{displayElementViewer("new-location")});
+
+	const new_tag_btn = document.querySelector("#new-tag-btn");
+	new_tag_btn.addEventListener("click",()=>{displayElementViewer("new-tag")});
 }
 
 async function refreshData() {
@@ -202,7 +227,7 @@ async function displayElements() {
 		const c_tel = document.querySelector("#app-settings-company-tel");
 		const c_siren = document.querySelector("#app-settings-company-siren");
 
-		c_name.innerText= company_data.name;
+		c_name.innerHTML= `<a href="https://annuaire-entreprises.data.gouv.fr/rechercher?terme=${company_data.siren}" target="_blank">${company_data.name}<a/>`;
 		c_address.innerText= company_data.address;
 		c_email.innerText= company_data.email;
 		c_tel.innerText= company_data.tel;
@@ -214,7 +239,10 @@ async function displayElements() {
 		const list_el = document.querySelector("#client-list");
 		for (let i of client_list){
 			dom+=`<li class="entity-item">
-					<h3><a href="https://annuaire-entreprises.data.gouv.fr/entreprise/${kebabize(i.name)}-${kebabize(i.siren)}" target="_blank">${i.name}</a></h3>
+					<div class='edit-element-container'>
+					<h3><a href="https://annuaire-entreprises.data.gouv.fr/rechercher?terme=${i.siren}" target="_blank">${i.name}</a></h3>
+					<button type="button" class="settings-edit-btn edit-client-btn" data-client="${escapeHtml(JSON.stringify(i))}" aria-label="Ajouter un client">${svg.edit}</button>
+					</div>
 					<p class="entity-detail">${i.address}</p>
 					<p class="entity-detail">${i.tel}</p>
 					<p class="entity-detail">${i.email}</p>
@@ -223,8 +251,11 @@ async function displayElements() {
 		}
 		list_el.innerHTML=dom;
 
-		function kebabize(str) {
-			return str.toLowerCase().replaceAll(" ", "-");
+		const edit_client_btn_list = document.querySelectorAll(".edit-client-btn");
+		for (let i of edit_client_btn_list){
+			i.addEventListener("click",()=>{
+				displayElementViewer("edit-client",JSON.parse(i.dataset.client))
+			});
 		}
 	}
 
@@ -232,28 +263,413 @@ async function displayElements() {
 		let dom = "";
 		const list_el = document.querySelector("#owner-list");
 		for (let i of owner_list){
-			dom+=`<li class="chip-item"><h3>${i.label}</h3></li>`
+			dom+=`<li class="chip-item owner-chip-item" data-owner="${escapeHtml(JSON.stringify(i))}"><h3>${i.label}</h3></li>`
 		}
 		list_el.innerHTML=dom;
+
+		const owner_chip_item_list = document.querySelectorAll(".owner-chip-item");
+		for (let i of owner_chip_item_list){
+			i.addEventListener("click",()=>{
+				displayElementViewer("edit-owner",JSON.parse(i.dataset.owner));
+			});
+		}
+
 	}
 
 	function displayLocations() {
 		let dom = "";
 		const list_el = document.querySelector("#location-list");
 		for (let i of address_list){
-			dom+=`<li class="entity-item"><h3>${i.label}</h3><p class="entity-detail">${i.address}</p></li>`
+			dom+=`
+			<li class="entity-item">
+				<div class='edit-element-container'>
+					<h3>${i.label}</h3>
+					<button type="button" class="settings-edit-btn edit-location-btn" data-location="${escapeHtml(JSON.stringify(i))}" aria-label="Ajouter un client">${svg.edit}</button>
+				</div>
+				<p class="entity-detail">${i.address}</p>
+			</li>`
 		}
 		list_el.innerHTML=dom;
+
+		const edit_location_btn_list = document.querySelectorAll(".edit-location-btn");
+		for (let i of edit_location_btn_list){
+			i.addEventListener("click",()=>{
+				displayElementViewer("edit-location",JSON.parse(i.dataset.location))
+			});
+		}
 	}
 
 	function displayTags() {
 		let dom = "";
 		const list_el = document.querySelector("#tag-list");
 		for (let i of tag_list){
-			dom+=`<li class="chip-item"><p>${i.label}</p></li>`
+			dom+=`<li class="chip-item tag-chip-item" data-tag="${escapeHtml(JSON.stringify(i))}"><p>${i.label}</p></li>`
 		}
 		list_el.innerHTML=dom;
+
+		const tag_chip_item_list = document.querySelectorAll(".tag-chip-item");
+		for (let i of tag_chip_item_list){
+			i.addEventListener("click",()=>{
+				displayElementViewer("edit-tag",JSON.parse(i.dataset.tag));
+			});
+		}
 	}
+}
+
+function displayElementViewer(mode = "item", data = {}) {
+	prevFocusedElement = document.activeElement;
+	let dom = '';
+	let loaded = false;
+
+	switch (mode) {
+		case "edit-company-data":
+			editCompanyDataMode();
+			break;
+		case "new-client":
+			newClientMode();
+			break;
+		case "edit-client":
+			editClientMode(data.siren);
+			break;
+		
+		case "new-owner":
+			newOwnerMode();
+			break;
+
+		case "edit-owner":
+			editOwnerMode(data.label)
+			break;
+	
+		case "new-location":
+			newLocationMode();
+			break;
+	
+		case "edit-location":
+			editLocationMode(data.address)
+			break;
+	
+		case "new-tag":
+			newTagMode();
+			break;
+	
+		case "edit-tag":
+			editTagMode(data.label);
+			break;
+	}
+
+	if (loaded) {
+		element_viewer.dataset.opened = "true";
+		element_viewer.setAttribute('aria-hidden', 'false');
+		document.body.classList.add('viewer-opened');
+		document.querySelector('main').setAttribute('aria-hidden', 'true');
+		document.querySelector('header').setAttribute('aria-hidden', 'true');
+		document.querySelector('footer').setAttribute('aria-hidden', 'true');
+		const content = document.getElementById('element-viewer-content');
+		if (content) {
+			content.focus();
+			trapFocus(content);
+		}
+	}
+
+	function editCompanyDataMode() {
+		loaded=true;
+		let dom =`
+		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
+			<div id="element-viewer-item-top-bar-holder">
+				<h2 id="viewer-title">Éditer les informations de la société</h2>
+				<menu id="element-viewer-item-menu">
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-confirm" aria-label="Confirmer">${svg.confirm}</button>
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
+				</menu>
+			</div>
+			<hr>
+		</div>
+		` 
+		element_viewer.innerHTML = dom;
+		bindElementsActions();
+
+		function bindElementsActions() {
+			const close_viewer = document.querySelector("#element-viewer-close");
+			close_viewer.addEventListener("click", () => closeViewer());
+			const confirm_edit = document.querySelector("#element-viewer-confirm");
+			confirm_edit.addEventListener("click", async () => {
+
+			});
+		}
+	}
+
+	function newClientMode() {
+		loaded=true;
+		let dom =`
+		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
+			<div id="element-viewer-item-top-bar-holder">
+				<h2 id="viewer-title">Nouveau client</h2>
+				<menu id="element-viewer-item-menu">
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-confirm" aria-label="Confirmer">${svg.confirm}</button>
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
+				</menu>
+			</div>
+			<hr>
+		</div>
+		` 
+		element_viewer.innerHTML = dom;
+		bindElementsActions();
+
+		function bindElementsActions() {
+			const close_viewer = document.querySelector("#element-viewer-close");
+			close_viewer.addEventListener("click", () => closeViewer());
+			const confirm_edit = document.querySelector("#element-viewer-confirm");
+			confirm_edit.addEventListener("click", async () => {
+
+			});
+		}
+	}
+
+	function editClientMode(ref) {
+		
+		let selected_client = {};
+		for (let i of client_list) {
+			if (i.siren === ref) {
+				selected_client = i;
+				loaded = true;
+				break;
+			}
+		}
+		if (!loaded) return;
+
+		let dom =`
+		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
+			<div id="element-viewer-item-top-bar-holder">
+				<h2 id="viewer-title">Éditer ${escapeHtml(selected_client.name)}</h2>
+				<menu id="element-viewer-item-menu">
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-confirm" aria-label="Confirmer">${svg.confirm}</button>
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
+				</menu>
+			</div>
+			<hr>
+		</div>
+		` 
+		element_viewer.innerHTML = dom;
+		bindElementsActions();
+
+		function bindElementsActions() {
+			const close_viewer = document.querySelector("#element-viewer-close");
+			close_viewer.addEventListener("click", () => closeViewer());
+			const confirm_edit = document.querySelector("#element-viewer-confirm");
+			confirm_edit.addEventListener("click", async () => {
+
+			});
+		}
+	}
+
+	function newOwnerMode() {
+		loaded=true;
+		let dom =`
+		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
+			<div id="element-viewer-item-top-bar-holder">
+				<h2 id="viewer-title">Nouveau propriétaire</h2>
+				<menu id="element-viewer-item-menu">
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-confirm" aria-label="Confirmer">${svg.confirm}</button>
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
+				</menu>
+			</div>
+			<hr>
+		</div>
+		` 
+		element_viewer.innerHTML = dom;
+		bindElementsActions();
+
+		function bindElementsActions() {
+			const close_viewer = document.querySelector("#element-viewer-close");
+			close_viewer.addEventListener("click", () => closeViewer());
+			const confirm_edit = document.querySelector("#element-viewer-confirm");
+			confirm_edit.addEventListener("click", async () => {
+
+			});
+		}
+	}
+
+	function editOwnerMode(ref) {
+		
+		let selected_owner = {};
+		for (let i of owner_list) {
+			if (i.label === ref) {
+				selected_owner = i;
+				loaded = true;
+				break;
+			}
+		}
+		if (!loaded) return;
+
+		let dom =`
+		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
+			<div id="element-viewer-item-top-bar-holder">
+				<h2 id="viewer-title">Éditer ${escapeHtml(selected_owner.label)}</h2>
+				<menu id="element-viewer-item-menu">
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-confirm" aria-label="Confirmer">${svg.confirm}</button>
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
+				</menu>
+			</div>
+			<hr>
+		</div>
+		` 
+		element_viewer.innerHTML = dom;
+		bindElementsActions();
+
+		function bindElementsActions() {
+			const close_viewer = document.querySelector("#element-viewer-close");
+			close_viewer.addEventListener("click", () => closeViewer());
+			const confirm_edit = document.querySelector("#element-viewer-confirm");
+			confirm_edit.addEventListener("click", async () => {
+
+			});
+		}
+	}
+
+	function newLocationMode() {
+		loaded=true;
+		let dom =`
+		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
+			<div id="element-viewer-item-top-bar-holder">
+				<h2 id="viewer-title">Nouvel emplacement</h2>
+				<menu id="element-viewer-item-menu">
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-confirm" aria-label="Confirmer">${svg.confirm}</button>
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
+				</menu>
+			</div>
+			<hr>
+		</div>
+		` 
+		element_viewer.innerHTML = dom;
+		bindElementsActions();
+
+		function bindElementsActions() {
+			const close_viewer = document.querySelector("#element-viewer-close");
+			close_viewer.addEventListener("click", () => closeViewer());
+			const confirm_edit = document.querySelector("#element-viewer-confirm");
+			confirm_edit.addEventListener("click", async () => {
+
+			});
+		}
+	}
+
+	function editLocationMode(ref) {
+		
+		let selected_location = {};
+		for (let i of address_list) {
+			if (i.address === ref) {
+				selected_location = i;
+				loaded = true;
+				break;
+			}
+		}
+		if (!loaded) return;
+
+		let dom =`
+		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
+			<div id="element-viewer-item-top-bar-holder">
+				<h2 id="viewer-title">Éditer ${escapeHtml(selected_location.label)}</h2>
+				<menu id="element-viewer-item-menu">
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-confirm" aria-label="Confirmer">${svg.confirm}</button>
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
+				</menu>
+			</div>
+			<hr>
+		</div>
+		` 
+		element_viewer.innerHTML = dom;
+		bindElementsActions();
+
+		function bindElementsActions() {
+			const close_viewer = document.querySelector("#element-viewer-close");
+			close_viewer.addEventListener("click", () => closeViewer());
+			const confirm_edit = document.querySelector("#element-viewer-confirm");
+			confirm_edit.addEventListener("click", async () => {
+
+			});
+		}
+	}
+
+	function newTagMode() {
+		loaded=true;
+		let dom =`
+		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
+			<div id="element-viewer-item-top-bar-holder">
+				<h2 id="viewer-title">Nouvelle étiquette</h2>
+				<menu id="element-viewer-item-menu">
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-confirm" aria-label="Confirmer">${svg.confirm}</button>
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
+				</menu>
+			</div>
+			<hr>
+		</div>
+		` 
+		element_viewer.innerHTML = dom;
+		bindElementsActions();
+
+		function bindElementsActions() {
+			const close_viewer = document.querySelector("#element-viewer-close");
+			close_viewer.addEventListener("click", () => closeViewer());
+			const confirm_edit = document.querySelector("#element-viewer-confirm");
+			confirm_edit.addEventListener("click", async () => {
+
+			});
+		}
+	}
+
+	function editTagMode(ref) {
+		
+		let selected_tag = {};
+		for (let i of tag_list) {
+			if (i.label === ref) {
+				selected_tag = i;
+				loaded = true;
+				break;
+			}
+		}
+		if (!loaded) return;
+
+		let dom =`
+		<div id="element-viewer-content" role="dialog" aria-modal="true" aria-labelledby="viewer-title" tabindex="-1">
+			<div id="element-viewer-item-top-bar-holder">
+				<h2 id="viewer-title">Éditer ${escapeHtml(selected_tag.label)}</h2>
+				<menu id="element-viewer-item-menu">
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-confirm" aria-label="Confirmer">${svg.confirm}</button>
+					<button type="button" class="element-viewer-menu-icons-btn" id="element-viewer-close" aria-label="Fermer">${svg.close}</button>
+				</menu>
+			</div>
+			<hr>
+		</div>
+		` 
+		element_viewer.innerHTML = dom;
+		bindElementsActions();
+
+		function bindElementsActions() {
+			const close_viewer = document.querySelector("#element-viewer-close");
+			close_viewer.addEventListener("click", () => closeViewer());
+			const confirm_edit = document.querySelector("#element-viewer-confirm");
+			confirm_edit.addEventListener("click", async () => {
+
+			});
+		}
+	}
+}
+
+function universalize(str) {
+    return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replaceAll(" ", "");
+}
+
+function escapeHtml(str) {
+	return String(str)
+		.replace(/&/g, "&amp;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#39;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;");
 }
 
 (async () => {
