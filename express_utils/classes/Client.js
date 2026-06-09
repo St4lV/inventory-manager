@@ -2,23 +2,24 @@ const { pool } = require("../postgres-connect");
 const { log } = require("../utils");
 
 class Client {
-	constructor(name,address,tel,email,siren) {
+	constructor(name,address,tel,email,siren,is_entity) {
 		this.name = name ?? null;
 		this.address = address ?? null;
 		this.tel = tel ?? null;
 		this.email = email ?? null;
 		this.siren = siren  ?? null;
+		this.is_entity = is_entity ?? null;
 		this.id = null;
 	}
 
 	async getAll() {
-		const query = "SELECT name, address, email, tel, siren FROM inventory.client;";
+		const query = "SELECT name, address, email, tel, siren, is_entity FROM inventory.client;";
 		try {
 			const result = await pool.query(query, [])
 			return { code: 200, data: result.rows };
 		} catch (error) {
 			log.error(error);
-			return { code: 500, data: error };
+			return { code: 500, data: "Internal server error" };
 		}
 	}
 
@@ -29,13 +30,13 @@ class Client {
 			return { code: 200, data: result.rows.length > 0 ? result.rows[0].name : [] };
 		} catch (error) {
 			log.error(error);
-			return { code: 500, data: error };
+			return { code: 500, data: "Internal server error" };
 		}
 	}
 
 	async create() {
 
-		if ( this.name === null || this.name === "" || this.email === null || this.email === "" || this.tel === null || this.tel === "" || this.siren === null || this.siren === "" || this.address === null || this.address === "" ) {
+		if ( this.name === null || this.name === "" || this.email === null || this.email === "" || this.tel === null || this.tel === "" || this.siren === null || this.siren === "" || this.address === null || this.address === "" || this.is_entity === null ) {
 			return { code: 400, data: "Error : No fields should be empty" }
 		}
 
@@ -44,13 +45,13 @@ class Client {
 		}
 
 		const _SQLquery = async () => {
-			const query = "INSERT INTO inventory.client (name, address, tel, email, siren) VALUES ($1, $2, $3, $4, $5) RETURNING id;";
+			const query = "INSERT INTO inventory.client (name, address, tel, email, siren, is_entity) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;";
 			try {
-				const result = await pool.query(query, [this.name, this.address, this.tel, this.email, this.siren])
+				const result = await pool.query(query, [this.name, this.address, this.tel, this.email, this.siren, this.is_entity])
 				const client_id = result.rows[0].id;
 				return { code: 201, data: "Created" };
 			} catch (error) {
-				return { code: 500, data: error };
+				return { code: 500, data: "Internal server error" };
 			}
 		}
 
@@ -62,7 +63,7 @@ class Client {
 		return client;
 	}
 
-	async modify(new_name="", new_address="", new_tel="", new_email="", new_siren="") {
+	async modify(new_name="", new_address="", new_tel="", new_email="", new_siren="", new_is_entity=true) {
 		if ( new_name === null || new_name === "" || new_email === null || new_email === "" || new_tel === null || new_tel === "" || new_siren === null || new_siren === "" || new_address === null || new_address === "" ) {
 			return { code: 400, data: "Error : No fields should be empty" }
 		}
@@ -72,12 +73,12 @@ class Client {
 		}
 
 		const _SQLquery = async () => {
-			const query = "UPDATE inventory.client SET name = $2, email = $3, tel = $4, siren = $5, address = $6 WHERE id = $1;";
+			const query = "UPDATE inventory.client SET name = $2, email = $3, tel = $4, siren = $5, address = $6, is_entity = $7 WHERE id = $1;";
 			try {
-				const result = await pool.query(query, [this.id, new_name, new_email, new_tel, new_siren, new_address]);
+				const result = await pool.query(query, [this.id, new_name, new_email, new_tel, new_siren, new_address, new_is_entity]);
 				return { code: 200, data: "OK" };
 			} catch (error) {
-				return { code: 500, data: error };
+				return { code: 500, data: "Internal server error" };
 			}
 		}
 
@@ -104,7 +105,7 @@ class Client {
 				const result = await pool.query(query, [this.id]);
 				return { code: 200, data: "OK" };
 			} catch (error) {
-				return { code: 500, data: error };
+				return { code: 500, data: "Internal server error" };
 			}
 		}
 

@@ -559,6 +559,12 @@ function displayElementViewer(mode = "item", data = {}) {
 					<label for="edit-client-siren">SIREN</label>
 					<input type="text" id="edit-client-siren" value="${escapeHtml(selected_client.siren)}" inputmode="numeric">
 				</div>
+				<div class="settings-form-field">
+				<div id="edit-client-is-entity-container">
+					<label for="edit-client-is-entity">Est une structure juridique : </label>
+					<input type="checkbox" id="edit-client-is-entity" ${selected_client.is_entity === true ? "checked" : ""}>
+				</div>
+				</div>
 			</fieldset>
 			<hr class="viewer-divider">
 			<button type="button" class="btn-supprimer" id="btn-delete-client" aria-label="Supprimer le client ${escapeHtml(selected_client.name)}">
@@ -574,11 +580,13 @@ function displayElementViewer(mode = "item", data = {}) {
 				tel: selected_client.tel,
 				email: selected_client.email,
 				siren: selected_client.siren,
+				is_entity: selected_client.is_entity,
 				new_name: document.getElementById('edit-client-name').value,
 				new_address: document.getElementById('edit-client-address').value,
 				new_tel: document.getElementById('edit-client-tel').value,
 				new_email: document.getElementById('edit-client-email').value,
 				new_siren: document.getElementById('edit-client-siren').value,
+				new_is_entity: document.getElementById('edit-client-is-entity').checked,
 			};
 			await HTTPRequest.put('/api/v1/client/', body);
 			closeViewer();
@@ -594,6 +602,7 @@ function displayElementViewer(mode = "item", data = {}) {
 					tel: selected_client.tel,
 					email: selected_client.email,
 					siren: selected_client.siren,
+					is_entity: selected_client.is_entity,
 				});
 				closeViewer();
 				await refreshData();

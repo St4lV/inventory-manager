@@ -10,22 +10,22 @@ router.get("/", async (req, res) => {
 })
 
 router.post("/", async (req, res) => {
-	const { name, email, tel, siren, address} = req.body;
-	const location = new Client( name, address, tel, email, siren)
+	const { name, email, tel, siren, address, is_entity} = req.body;
+	const location = new Client( name, address, tel, email, siren, is_entity)
 	const result = await location.create();
 	return res.status(result.code).json(result);
 })
 
 router.put("/", async (req, res) => {
-	const { name, email, tel, siren, address, new_name, new_email, new_tel, new_siren, new_address} = req.body;
-	const location = new Client( name, address, tel, email, siren)
-	const result = await location.modify( new_name, new_address, new_tel, new_email, new_siren);
+	const { name, email, tel, siren, address, is_entity, new_name, new_email, new_tel, new_siren, new_address, new_is_entity} = req.body;
+	const location = new Client( name, address, tel, email, siren, is_entity)
+	const result = await location.modify( new_name, new_address, new_tel, new_email, new_siren, new_is_entity);
 	return res.status(result.code).json(result);
 })
 
 router.delete("/", async (req, res) => {
-	const { name, email, tel, siren, address} = req.body;
-	const location = new Client( name, address, tel, email, siren)
+	const { name, email, tel, siren, address, is_entity} = req.body;
+	const location = new Client( name, address, tel, email, siren, is_entity)
 	const result = await location.delete();
 	return res.status(result.code).json(result);
 })

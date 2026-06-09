@@ -710,3 +710,8 @@ footer {
 footer a {
 	color: var(--color-text);
 }
+
+.edit-client-is-entity-container{
+	display: flex;
+	align-items:flex-end;
+}
