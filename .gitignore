@@ -5,5 +5,6 @@ node_modules/
 client/test_api/
 client/template.html
 client/assets/logo_couleur.svg
+client/assets/favicon.ico
 
 postgres-init.sql

@@ -203,6 +203,7 @@ a {
 	display: grid;
 	grid-template-columns: 1fr;
 	gap: 16px;
+	max-height: 450px;
 }
 
 /* ===========================
