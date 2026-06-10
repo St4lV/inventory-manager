@@ -824,6 +824,24 @@ function displayElementViewer(mode = "item", data = {}) {
 		</div>
 		</fieldset>
 	
+		<div class="stock-form-field">
+			<label for="edit-viewer-specification" >Spécifications</label>
+			<textarea id="edit-viewer-specifiation" rows="5" class="item-list-input"></textarea>
+		</div>
+
+		<div class="stock-form-grid">
+			<div class="stock-form-field">
+				<label for="stock-input-rental-price">Prix de location (€)</label>
+				<input id="stock-input-rental-price" type="number" min="0" step="0.01" class="item-list-input">
+			</div>
+			<div class="stock-form-field stock-form-field--toggle">
+				<label class="stock-toggle-label" for="stock-input-second-hand">
+					<input id="stock-input-second-hand" type="checkbox" class="stock-toggle-checkbox">
+					<span class="stock-toggle-text">Acheté d'occasion</span>
+				</label>
+			</div>
+		</div>
+
 		</form>
 		${selected_item.stock.length > 0 ? `
 		<section class="stock-existing-section" aria-label="Stocks existants">
@@ -873,6 +891,9 @@ function displayElementViewer(mode = "item", data = {}) {
 				const vat_set = document.querySelector("#stock-input-vat").checked;
 				const vat_rate = parseFloat(document.querySelector("#stock-input-vat-rate").value) || 0;
 				const location_address = document.querySelector("#stock-input-location").value;
+				const rental_price = document.querySelector("#stock-input-rental-price").value || 0.00;
+				const specifiation = document.querySelector("#edit-viewer-specifiation").value || "";
+				const second_hand = document.querySelector("#stock-input-second-hand").checked || false;
 				const location_obj = address_list.find(a => a.address === location_address)
 					|| { address: location_address, label: location_address };
 
@@ -889,7 +910,10 @@ function displayElementViewer(mode = "item", data = {}) {
 					location_data: location_obj,
 					condition_data: {label:condition},
 					owner_data : {label:owner},
-					item_data : selected_item
+					item_data : selected_item,
+					rental_price: rental_price,
+					specifiation: specifiation,
+					second_hand: second_hand,
 				};
 				await HTTPRequest.post("/api/v1/stock/", body);
 				await refreshData();
@@ -1008,6 +1032,23 @@ function displayElementViewer(mode = "item", data = {}) {
 		</div>
 		</fieldset>
 	
+		<div class="stock-form-field">
+			<label for="edit-viewer-specification" class="sr-only">Spécifications</label>
+			<textarea id="edit-viewer-specifiation" rows="5" class="item-list-input">${escapeHtml(selected_stock.specification)}</textarea>
+		</div>
+
+		<div class="stock-form-grid">
+			<div class="stock-form-field">
+				<label for="stock-input-rental-price">Prix de location (€)</label>
+				<input id="stock-input-rental-price" type="number" min="0" step="0.01" class="item-list-input" value="${escapeHtml(selected_stock.rental_price)}">
+			</div>
+			<div class="stock-form-field stock-form-field--toggle">
+				<label class="stock-toggle-label" for="stock-input-second-hand">
+					<input id="stock-input-second-hand" type="checkbox" class="stock-toggle-checkbox" ${selected_stock.second_hand === true ? "checked" : ""}>
+					<span class="stock-toggle-text">Acheté d'occasion</span>
+				</label>
+			</div>
+		</div>
 		</form>
 		<button type="button" class="btn-supprimer-stock" id="stock-btn-supprimer">
 			${svg.delete}<span>Supprimer ce lot</span>
@@ -1060,6 +1101,9 @@ function displayElementViewer(mode = "item", data = {}) {
 				const vat_set = document.querySelector("#stock-input-vat").checked;
 				const vat_rate = parseFloat(document.querySelector("#stock-input-vat-rate").value) || 0;
 				const location_address = document.querySelector("#stock-input-location").value;
+				const rental_price = document.querySelector("#stock-input-rental-price").value || 0;
+				const specifiation = document.querySelector("#edit-viewer-specifiation").value || "";
+				const second_hand = document.querySelector("#stock-input-second-hand").checked || false;
 				const location_obj = address_list.find(a => a.address === location_address)
 					|| { address: location_address, label: location_address };
 
@@ -1076,6 +1120,9 @@ function displayElementViewer(mode = "item", data = {}) {
 					condition_data: { label: selected_stock.condition },
 					location_data: selected_stock.location,
 					owner_data: { label: selected_stock.owner },
+					rental_price : selected_stock.rental_price,
+					specifiation : selected_stock.specifiation,
+					second_hand : selected_stock.second_hand,
 					
 					new_label: label,
 					new_tax_rate: vat_rate,
@@ -1087,6 +1134,9 @@ function displayElementViewer(mode = "item", data = {}) {
 					new_condition_data: { label: condition },
 					new_location_data: location_obj,
 					new_owner_data: { label: owner },
+					new_rental_price: rental_price,
+					new_specification : specifiation,
+					new_second_hand : second_hand,
 				};
 				await HTTPRequest.put("/api/v1/stock/", body);
 				await refreshData();
@@ -1110,6 +1160,9 @@ function displayElementViewer(mode = "item", data = {}) {
 							condition_data: JSON.stringify({ label: selected_stock.condition }),
 							location_data: JSON.stringify(selected_stock.location),
 							owner_data: JSON.stringify({ label: selected_stock.owner }),
+							rental_price:selected_stock.rental_price,
+							specifiation:selected_stock.specifiation,
+							second_hand:selected_stock.second_hand,
 						});
 						await HTTPRequest.delete(`/api/v1/stock/?${params.toString()}`);
 						await refreshData();

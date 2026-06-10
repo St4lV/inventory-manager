@@ -6,7 +6,7 @@ const Location = require("./Location");
 const Owner = require("./Owner");
 
 class Stock {
-	constructor(label, tax_rate, tax_set, purchase_price, purchase_date, count, item_data, condition_data, location_data, owner_data) {
+	constructor(label, tax_rate, tax_set, purchase_price, purchase_date, count, item_data, condition_data, location_data, owner_data, rental_price, specification, second_hand,) {
 		this.label = label ?? null;
 		this.tax_rate = tax_rate ?? 20.00;
 		this.tax_set = tax_set ?? true;
@@ -17,12 +17,16 @@ class Stock {
 		this.condition_data = condition_data ?? null;
 		this.location_data = location_data ?? null;
 		this.owner_data = owner_data ?? null;
+		this.rental_price = rental_price ?? 0.00; 
+		this.specification = specification ?? "";
+		this.second_hand = second_hand ?? false;
+		
 		this._id = null;
 		this._components_cache = null;
 	}
 
 	async getAll() {
-		const query = ` SELECT s.label, s.count, s.vat_set AS tax_set, s.vat_rate AS tax_rate, s.purchase_price, s.purchase_date, json_build_object( 'label', i.label, 'img_url', i.img_url, 'description', i.description, 'reference', i.reference) AS item_data, json_build_object('label', c.label) AS condition_data, json_build_object('label', l.label, 'address', l.address) AS location_data, json_build_object('label', o.label) AS owner_data FROM inventory.stock s LEFT JOIN inventory.item i ON s.item_id = i.id LEFT JOIN inventory.condition c ON s.condition_id = c.id LEFT JOIN inventory.location l ON s.location_id = l.id LEFT JOIN inventory.owner o ON s.owner_id = o.id ORDER BY s.label;`;
+		const query = ` SELECT s.second_hand, s.rental_price, s.specification, s.label, s.count, s.vat_set AS tax_set, s.vat_rate AS tax_rate, s.purchase_price, s.purchase_date, json_build_object( 'label', i.label, 'img_url', i.img_url, 'description', i.description, 'reference', i.reference) AS item_data, json_build_object('label', c.label) AS condition_data, json_build_object('label', l.label, 'address', l.address) AS location_data, json_build_object('label', o.label) AS owner_data FROM inventory.stock s LEFT JOIN inventory.item i ON s.item_id = i.id LEFT JOIN inventory.condition c ON s.condition_id = c.id LEFT JOIN inventory.location l ON s.location_id = l.id LEFT JOIN inventory.owner o ON s.owner_id = o.id ORDER BY s.label;`;
 		try {
 			const result = await pool.query(query, []);
 			return { code: 200, data: result.rows };
@@ -44,9 +48,9 @@ class Stock {
 		const components = await this._getComponentData(true);
 
 		const _SQLquery = async () => {
-			const query = `INSERT INTO inventory.stock (label, item_id, condition_id, location_id, count, vat_set, vat_rate, purchase_price, purchase_date, owner_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id;`;
+			const query = `INSERT INTO inventory.stock (label, item_id, condition_id, location_id, count, vat_set, vat_rate, purchase_price, purchase_date, owner_id, rental_price, specification, second_hand) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id;`;
 			try {
-				await pool.query(query, [this.label, components.item_id, components.condition_id, components.location_id, this.count, this.tax_set, this.tax_rate, this.purchase_price, this.purchase_date, components.owner_id]);
+				await pool.query(query, [this.label, components.item_id, components.condition_id, components.location_id, this.count, this.tax_set, this.tax_rate, this.purchase_price, this.purchase_date, components.owner_id, this.rental_price, this.specification, this.second_hand,]);
 				return { code: 201, data: "Created" };
 			} catch (error) {
 				return { code: 500, data: error };
@@ -61,8 +65,8 @@ class Stock {
 		return stock;
 	}
 
-	async modify(new_label = '', new_tax_rate = '', new_tax_set = '', new_purchase_price = '', new_purchase_date = '', new_count = '', new_item_data = '', new_condition_data = '', new_location_data = '', new_owner_data = '') {
-		if (!this._validateData() || new_label === '' || new_tax_rate === '' || new_tax_set === '' || new_purchase_price === '' || new_purchase_date === '' || new_count === '' || new_item_data === '' || new_condition_data === '' || new_location_data === '' || new_owner_data === '') {
+	async modify(new_label = '', new_tax_rate = '', new_tax_set = '', new_purchase_price = '', new_purchase_date = '', new_count = '', new_item_data = '', new_condition_data = '', new_location_data = '', new_owner_data = '', new_rental_price = '', new_specification = '', new_second_hand = '') {
+		if (!this._validateData() || new_label === '' || new_tax_rate === '' || new_tax_set === '' || new_purchase_price === '' || new_purchase_date === '' || new_count === '' || new_item_data === '' || new_condition_data === '' || new_location_data === '' || new_owner_data === '' || new_rental_price === '' || new_specification === '' || new_second_hand === '') {
 			return { code: 400, data: "Error : No fields should be empty" };
 		}
 
@@ -74,20 +78,34 @@ class Stock {
 		const new_components = await this._getComponentData(false, new_condition_data, new_item_data, new_location_data, new_owner_data);
 
 		const _SQLquery = async () => {
-			const query = `UPDATE inventory.stock SET label = $11, item_id = $12, condition_id = $13, location_id = $14, count = $15, vat_set = $16, vat_rate = $17, purchase_price = $18, purchase_date = $19, owner_id = $20 WHERE label = $1 AND item_id = $2 AND condition_id = $3 AND location_id = $4 AND count = $5 AND vat_set = $6 AND vat_rate = $7 AND purchase_price = $8 AND purchase_date = $9 AND owner_id = $10 RETURNING id;`;
+			const query = `UPDATE inventory.stock
+				SET label = $14, item_id = $15, condition_id = $16, location_id = $17,
+					count = $18, vat_set = $19, vat_rate = $20, purchase_price = $21,
+					purchase_date = $22, owner_id = $23, rental_price = $24,
+					specification = $25, second_hand = $26
+				WHERE label = $1 AND item_id = $2 AND condition_id = $3
+					AND location_id = $4 AND count = $5 AND vat_set = $6
+					AND vat_rate = $7 AND purchase_price = $8 AND purchase_date = $9
+					AND owner_id = $10 AND rental_price = $11
+					AND specification = $12 AND second_hand = $13
+				RETURNING id;`;
 			try {
 				await pool.query(query, [
+
 					this.label, components.item_id, components.condition_id,
 					components.location_id, this.count, this.tax_set, this.tax_rate,
 					this.purchase_price, this.purchase_date, components.owner_id,
+					this.rental_price, this.specification, this.second_hand,
 
 					new_label, new_components.item_id, new_components.condition_id,
 					new_components.location_id, new_count, new_tax_set, new_tax_rate,
 					new_purchase_price, convertDateToDBFormat(new_purchase_date), new_components.owner_id,
+					new_rental_price, new_specification, new_second_hand,
+
 				]);
 				return { code: 200, data: "OK" };
 			} catch (error) {
-				return { code: 500, data: error };
+				return { code: 500, data: "Internal server error" };
 			}
 		};
 
@@ -111,9 +129,9 @@ class Stock {
 		const components = this._components_cache;
 
 		const _SQLquery = async () => {
-			const query = `DELETE FROM inventory.stock WHERE label = $1 AND item_id = $2 AND condition_id = $3 AND location_id = $4 AND count = $5 AND vat_set = $6 AND vat_rate = $7 AND purchase_price = $8 AND purchase_date = $9 AND owner_id = $10;`;
+			const query = `DELETE FROM inventory.stock WHERE label = $1 AND item_id = $2 AND condition_id = $3 AND location_id = $4 AND count = $5 AND vat_set = $6 AND vat_rate = $7 AND purchase_price = $8 AND purchase_date = $9 AND owner_id = $10 AND rental_price = $11 AND specification = $12 AND second_hand = $13;`;
 			try {
-				await pool.query(query, [this.label, components.item_id, components.condition_id, components.location_id, this.count, this.tax_set, this.tax_rate, this.purchase_price, this.purchase_date, components.owner_id]);
+				await pool.query(query, [this.label, components.item_id, components.condition_id, components.location_id, this.count, this.tax_set, this.tax_rate, this.purchase_price, this.purchase_date, components.owner_id, this.rental_price, this.specification, this.second_hand]);
 				return { code: 200, data: "OK" };
 			} catch (error) {
 				log.error(error)

@@ -14,7 +14,7 @@ class Item {
 
 	async getAll() {
 		const itemsQuery = `
-			SELECT i.label, i.img_url, i.description, i.reference, i.tags AS tags_raw, COALESCE(json_agg(json_build_object( 'label', s.label, 'condition', c.label, 'count', s.count, 'location', json_build_object('label', l.label, 'address', l.address), 'owner', o.label, 'purchase_date', s.purchase_date, 'purchase_price', s.purchase_price, 'vat', json_build_object('set', s.vat_set, 'rate', s.vat_rate) )) FILTER (WHERE s.id IS NOT NULL), '[]') AS stock FROM inventory.item i LEFT JOIN inventory.stock s ON s.item_id = i.id LEFT JOIN inventory.condition c ON s.condition_id = c.id LEFT JOIN inventory.location l ON s.location_id = l.id LEFT JOIN inventory.owner o ON s.owner_id = o.id GROUP BY i.id, i.label, i.img_url, i.description, i.reference, i.tags ORDER BY i.label;`;
+			SELECT i.label, i.img_url, i.description, i.reference, i.tags AS tags_raw, COALESCE(json_agg(json_build_object( 'label', s.label, 'condition', c.label, 'count', s.count, 'location', json_build_object('label', l.label, 'address', l.address), 'owner', o.label, 'purchase_date', s.purchase_date, 'purchase_price', s.purchase_price, 'second_hand', s.second_hand, 'specification', s.specification, 'rental_price', s.rental_price, 'vat', json_build_object('set', s.vat_set, 'rate', s.vat_rate) )) FILTER (WHERE s.id IS NOT NULL), '[]') AS stock FROM inventory.item i LEFT JOIN inventory.stock s ON s.item_id = i.id LEFT JOIN inventory.condition c ON s.condition_id = c.id LEFT JOIN inventory.location l ON s.location_id = l.id LEFT JOIN inventory.owner o ON s.owner_id = o.id GROUP BY i.id, i.label, i.img_url, i.description, i.reference, i.tags ORDER BY i.label;`;
 		try {
 			const itemsResult = await pool.query(itemsQuery, []);
 
