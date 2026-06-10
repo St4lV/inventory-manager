@@ -715,3 +715,22 @@ footer a {
 	display: flex;
 	align-items:flex-end;
 }
+
+
+@media (min-width: 601px) {
+	.hidden-on-desktop {
+		display: none;
+	}
+}
+
+@media (max-width: 600px) {
+	.hidden-on-mobile {
+		display: none;
+	}
+}
+
+#header-nav-title-comp {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}

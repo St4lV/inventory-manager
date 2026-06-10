@@ -1192,3 +1192,43 @@ footer {
 footer a {
 	color: var(--color-text);
 }
+
+@media (min-width: 601px) {
+	.hidden-on-desktop {
+		display: none;
+	}
+}
+
+@media (max-width: 600px) {
+	.hidden-on-mobile {
+		display: none;
+	}
+}
+
+#header-nav-title-comp {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+@media (max-width: 900px){
+	.search-item-900-flex-col {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.search-item-900-flex-col div, .search-item-900-flex-col button {
+		width: 100%;
+		text-align: center;
+	}
+
+	.search-item-900-flex-col div select{
+		text-align: center;
+	}
+}
+
+#menu-bar-add-item{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

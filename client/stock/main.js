@@ -414,7 +414,7 @@ function displayElementViewer(mode = "item", data = {}) {
 					<span class="item-viewer-condition-badge">${escapeHtml(j.condition)}</span>
 					<span class="item-viewer-stock-meta-item">${escapeHtml(j.location.label)}</span>
 					<span class="item-viewer-stock-meta-item">${escapeHtml(j.owner)}</span>
-					<span class="item-viewer-stock-meta-item">${escapeHtml(j.purchase_date)}</span>
+					<span class="item-viewer-stock-meta-item">${dateFormatter(escapeHtml(j.purchase_date))}</span>
 				</div>
 			</li>`).join('')}
 		</ul>`}
@@ -1126,6 +1126,12 @@ function displayElementViewer(mode = "item", data = {}) {
 				});
 			}
 		}
+	}
+
+	function dateFormatter(utc_h="2022-03-02T01:00:00") {
+		const vals = (utc_h.split("T")[0]).split("-");
+		const result = `${vals[2]} / ${vals[1]} / ${vals[0]}`;
+		return result;
 	}
 }
 
