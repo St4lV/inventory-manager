@@ -53,6 +53,7 @@ class Stock {
 				await pool.query(query, [this.label, components.item_id, components.condition_id, components.location_id, this.count, this.tax_set, this.tax_rate, this.purchase_price, this.purchase_date, components.owner_id, this.rental_price, this.specification, this.second_hand,]);
 				return { code: 201, data: "Created" };
 			} catch (error) {
+				log.error(error);
 				return { code: 500, data: error };
 			}
 		};
@@ -67,35 +68,39 @@ class Stock {
 
 	async modify(new_label = '', new_tax_rate = '', new_tax_set = '', new_purchase_price = '', new_purchase_date = '', new_count = '', new_item_data = '', new_condition_data = '', new_location_data = '', new_owner_data = '', new_rental_price = '', new_specification = '', new_second_hand = '') {
 		if (!this._validateData() || new_label === '' || new_tax_rate === '' || new_tax_set === '' || new_purchase_price === '' || new_purchase_date === '' || new_count === '' || new_item_data === '' || new_condition_data === '' || new_location_data === '' || new_owner_data === '' || new_rental_price === '' || new_specification === '' || new_second_hand === '') {
+			
 			return { code: 400, data: "Error : No fields should be empty" };
 		}
 
 		if (!await this._exist()) {
-			return { code: 401, data: `Stock with label ${this.label} does not exist` };
+			return { code: 404, data: `Stock with label ${this.label} does not exist` };
 		}
 
 		const components = this._components_cache;
 		const new_components = await this._getComponentData(false, new_condition_data, new_item_data, new_location_data, new_owner_data);
-
+		console.log(this.id)
 		const _SQLquery = async () => {
 			const query = `UPDATE inventory.stock
-				SET label = $14, item_id = $15, condition_id = $16, location_id = $17,
-					count = $18, vat_set = $19, vat_rate = $20, purchase_price = $21,
-					purchase_date = $22, owner_id = $23, rental_price = $24,
-					specification = $25, second_hand = $26
-				WHERE label = $1 AND item_id = $2 AND condition_id = $3
-					AND location_id = $4 AND count = $5 AND vat_set = $6
-					AND vat_rate = $7 AND purchase_price = $8 AND purchase_date = $9
-					AND owner_id = $10 AND rental_price = $11
-					AND specification = $12 AND second_hand = $13
+				SET label = $2,
+				  item_id = $3,
+			 condition_id = $4,
+			  location_id = $5,
+					count = $6,
+				  vat_set = $7,
+				 vat_rate = $8,
+		   purchase_price = $9,
+			purchase_date = $10,
+			     owner_id = $11,
+			 rental_price = $12,
+			specification = $13,
+			  second_hand = $14
+				WHERE id = $1
 				RETURNING id;`;
+			
 			try {
-				await pool.query(query, [
+				const result = await pool.query(query, [
 
-					this.label, components.item_id, components.condition_id,
-					components.location_id, this.count, this.tax_set, this.tax_rate,
-					this.purchase_price, this.purchase_date, components.owner_id,
-					this.rental_price, this.specification, this.second_hand,
+					this.id,
 
 					new_label, new_components.item_id, new_components.condition_id,
 					new_components.location_id, new_count, new_tax_set, new_tax_rate,
@@ -103,17 +108,18 @@ class Stock {
 					new_rental_price, new_specification, new_second_hand,
 
 				]);
-				return { code: 200, data: "OK" };
+
+				if (result.rowCount>0) {
+					return { code: 200, data: "OK" };
+				}
+				return { code : 404, data : "Not found in database" };
 			} catch (error) {
+				log.error(error)
 				return { code: 500, data: "Internal server error" };
 			}
 		};
 
 		const stock = await _SQLquery();
-		if (stock.code !== 200) {
-			log.error(stock);
-			return { code: 500, data: "Internal server error" };
-		}
 		return stock;
 	}
 
@@ -123,15 +129,15 @@ class Stock {
 		}
 
 		if (!await this._exist()) {
-			return { code: 401, data: `Stock with label ${this.label} does not exist` };
+			return { code: 404, data: `Stock with label ${this.label} does not exist` };
 		}
 
 		const components = this._components_cache;
 
 		const _SQLquery = async () => {
-			const query = `DELETE FROM inventory.stock WHERE label = $1 AND item_id = $2 AND condition_id = $3 AND location_id = $4 AND count = $5 AND vat_set = $6 AND vat_rate = $7 AND purchase_price = $8 AND purchase_date = $9 AND owner_id = $10 AND rental_price = $11 AND specification = $12 AND second_hand = $13;`;
+			const query = `DELETE FROM inventory.stock WHERE id = $1;`;
 			try {
-				await pool.query(query, [this.label, components.item_id, components.condition_id, components.location_id, this.count, this.tax_set, this.tax_rate, this.purchase_price, this.purchase_date, components.owner_id, this.rental_price, this.specification, this.second_hand]);
+				await pool.query(query, [this.id]);
 				return { code: 200, data: "OK" };
 			} catch (error) {
 				log.error(error)
