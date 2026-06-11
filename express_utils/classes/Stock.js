@@ -78,7 +78,6 @@ class Stock {
 
 		const components = this._components_cache;
 		const new_components = await this._getComponentData(false, new_condition_data, new_item_data, new_location_data, new_owner_data);
-		console.log(this.id)
 		const _SQLquery = async () => {
 			const query = `UPDATE inventory.stock
 				SET label = $2,

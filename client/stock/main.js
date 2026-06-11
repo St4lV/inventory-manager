@@ -436,7 +436,13 @@ function displayElementViewer(mode = "item", data = {}) {
 				showConfirmModal(
 					`Supprimer définitivement « ${selected_item.label} » ? Cette action est irréversible.`,
 					async () => {
-						await HTTPRequest.delete(`/api/v1/item/${encodeURIComponent(selected_item.reference)}`);
+						const params = new URLSearchParams({
+							label : selected_item.label,
+							img_url : selected_item.img_url,
+							description : selected_item.description,
+							reference : selected_item.reference
+						});
+						await HTTPRequest.delete(`/api/v1/item/?${params.toString()}`);
 						closeViewer();
 						await refreshData();
 						await displayElements();
