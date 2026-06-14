@@ -26,10 +26,28 @@ class Stock {
 	}
 
 	async getAll() {
-		const query = ` SELECT s.second_hand, s.rental_price, s.specification, s.label, s.count, s.vat_set AS tax_set, s.vat_rate AS tax_rate, s.purchase_price, s.purchase_date, json_build_object( 'label', i.label, 'img_url', i.img_url, 'description', i.description, 'reference', i.reference) AS item_data, json_build_object('label', c.label) AS condition_data, json_build_object('label', l.label, 'address', l.address) AS location_data, json_build_object('label', o.label) AS owner_data FROM inventory.stock s LEFT JOIN inventory.item i ON s.item_id = i.id LEFT JOIN inventory.condition c ON s.condition_id = c.id LEFT JOIN inventory.location l ON s.location_id = l.id LEFT JOIN inventory.owner o ON s.owner_id = o.id ORDER BY s.label;`;
+		const query = `SELECT s.second_hand, s.rental_price, s.specification, s.label, s.count, s.vat_set AS tax_set, s.vat_rate AS tax_rate, s.purchase_price, s.purchase_date, i.tags AS tags_raw, json_build_object('label', i.label, 'img_url', i.img_url, 'description', i.description, 'reference', i.reference) AS item_data, json_build_object('label', c.label) AS condition_data, json_build_object('label', l.label, 'address', l.address) AS location_data, json_build_object('label', o.label) AS owner_data FROM inventory.stock s LEFT JOIN inventory.item i ON s.item_id = i.id LEFT JOIN inventory.condition c ON s.condition_id = c.id LEFT JOIN inventory.location l ON s.location_id = l.id LEFT JOIN inventory.owner o ON s.owner_id = o.id ORDER BY s.label;`;
 		try {
-			const result = await pool.query(query, []);
-			return { code: 200, data: result.rows };
+			const stockResult = await pool.query(query, []);
+			const tagsResult = await pool.query(`SELECT id, label FROM inventory.tag;`, []);
+	
+			const tagsById = new Map(tagsResult.rows.map(t => [t.id, t.label]));
+	
+			const data = stockResult.rows.map(row => {
+				const ids = (row.tags_raw ?? '')
+					.split(';')
+					.map(s => s.trim())
+					.filter(s => s !== '')
+					.map(Number)
+					.filter(n => !Number.isNaN(n));
+	
+				const tags = ids.map(id => tagsById.get(id)).filter(Boolean).sort((a, b) => a.localeCompare(b));
+	
+				const { tags_raw, item_data, ...rest } = row;
+				return { ...rest, item_data: { ...item_data, tags } };
+			});
+	
+			return { code: 200, data };
 		} catch (error) {
 			log.error(error);
 			return { code: 500, data: "Internal server error" };
