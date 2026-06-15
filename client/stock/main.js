@@ -1204,7 +1204,7 @@ async function displayFooterData() {
 	if (result.status !== 200) return;
 	const app_data = result.data;
 	const footer = document.querySelector("footer");
-	footer.innerHTML = `<p>App made by <a href="https://github.com/${app_data.dev}" target="_blank">${app_data.dev}/a> | ${app_data.app}@${app_data.version} | ${app_data.license} License</p>`;
+	footer.innerHTML = `<p>App made by <a href="https://github.com/${app_data.dev}" target="_blank">${app_data.dev}</a> | ${app_data.app}@${app_data.version} | ${app_data.license} License</p>`;
 }
 
 function universalize(str) {
