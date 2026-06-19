@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Gestionnaire d'inventaire - Génération de contrat</title>
 	<link rel="stylesheet" href="/pdf/style.css">
+	<link rel="stylesheet" href="/pdf/pdf.css">
 </head>
 
 <body>
@@ -18,45 +19,353 @@
 		</a>
 		<nav id="navbar-icons-comp">
 			<a href="/" aria-label="Accueil" class="header-link">
-				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-house"
-					viewBox="0 0 16 16">
-					<path
-						d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+					<path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
 				</svg>
 			</a>
 			<a href="/stock" aria-label="Inventaire" class="header-link">
-				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-box-seam"
-					viewBox="0 0 16 16">
-					<path
-						d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z" />
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16">
+					<path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z" />
 				</svg>
 			</a>
 			<a href="/pdf" aria-label="Génération de PDF" class="header-link">
-				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-filetype-pdf"
-					viewBox="0 0 16 16">
-					<path fill-rule="evenodd"
-						d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z" />
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z" />
 				</svg>
 			</a>
 			<a href="/app-settings" aria-label="Réglages" class="header-link">
-				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building-lock"
-					viewBox="0 0 16 16">
-					<path
-						d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z" />
-					<path
-						d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM9 13a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1" />
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building-lock" viewBox="0 0 16 16">
+					<path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z" />
+					<path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM9 13a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1" />
 				</svg>
 			</a>
 		</nav>
 	</header>
-	<div id="element-viewer" data-opened="false" aria-hidden="true"></div>
 	<main>
 
+		<!-- ===== PANNEAU DE CONFIGURATION ===== -->
+		<aside id="contrat-menu">
+
+			<div class="menu-header">
+				<span class="menu-header-title">Nouveau contrat</span>
+				<span id="draft-indicator" class="draft-badge" hidden>● Brouillon</span>
+			</div>
+
+			<div class="menu-body">
+
+				<!-- Section : Parties & dates -->
+				<div class="menu-section">
+					<h2 class="menu-section-title">Parties &amp; dates</h2>
+
+					<div class="menu-field">
+						<label for="menu-select-client">Client</label>
+						<select id="menu-select-client">
+							<option value="none" selected disabled>Sélectionner un client</option>
+						</select>
+					</div>
+
+					<div class="menu-field">
+						<label for="menu-select-location">Lieu de remise</label>
+						<select id="menu-select-location">
+							<option value="none" selected disabled>Sélectionner une adresse</option>
+						</select>
+					</div>
+
+					<div class="menu-dates-row">
+						<div class="menu-field">
+							<label for="menu-date-start">Début</label>
+							<input id="menu-date-start" type="datetime-local">
+						</div>
+						<div class="menu-field">
+							<label for="menu-date-end">Fin</label>
+							<input id="menu-date-end" type="datetime-local">
+						</div>
+					</div>
+				</div>
+
+				<!-- Section : Sélection des lots -->
+				<div class="menu-section menu-section--lots">
+					<h2 class="menu-section-title">
+						Lots à louer
+						<span id="lot-count-badge" class="lot-badge" hidden>0</span>
+					</h2>
+
+					<div class="menu-filters">
+						<div class="menu-field">
+							<label for="menu-search-select-tag">Étiquette</label>
+							<select id="menu-search-select-tag">
+								<option value="none" selected>Toutes</option>
+							</select>
+						</div>
+						<div class="menu-field">
+							<label for="menu-search-select-item">Article</label>
+							<select id="menu-search-select-item">
+								<option value="none" disabled selected>Tous</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="menu-field">
+						<label for="menu-search-input-search">Recherche de lot</label>
+						<div class="menu-search-row">
+							<input id="menu-search-input-search" list="menu-search-datalist" type="search" placeholder="Nom du lot…" autocomplete="off">
+							<button id="menu-search-add-item" class="btn-add" type="button">
+								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg>
+								Ajouter
+							</button>
+							<datalist id="menu-search-datalist"></datalist>
+						</div>
+					</div>
+
+					<!-- État vide -->
+					<div id="menu-lots-empty" class="menu-lots-empty">
+						<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" opacity="0.3" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4z"/></svg>
+						<p>Aucun lot ajouté</p>
+						<p class="menu-lots-empty-hint">Sélectionnez un lot via la recherche ci-dessus</p>
+					</div>
+
+					<!-- Tableau des lots -->
+					<div id="menu-lots-table-wrapper" hidden>
+						<table class="menu-lots-table">
+							<thead>
+								<tr>
+									<th scope="col">Lot</th>
+									<th scope="col">Qté</th>
+									<th scope="col">Prix / 24h</th>
+									<th scope="col">État</th>
+									<th scope="col"><span class="sr-only">Actions</span></th>
+								</tr>
+							</thead>
+							<tbody id="menu-stock-list-tbody"></tbody>
+							<tfoot>
+								<tr>
+									<th colspan="2">Total TTC</th>
+									<td id="menu-total-ttc" colspan="2">-</td>
+									<td></td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+
+				</div><!-- /.menu-section -->
+			</div><!-- /.menu-body -->
+
+			<!-- Actions épinglées en bas -->
+			<div class="menu-actions">
+				<button id="btn-reset" class="btn-secondary" type="button">Réinitialiser</button>
+				<button id="btn-generate" class="btn-primary" type="button">
+					<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+						<path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
+						<path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1"/>
+					</svg>
+					Générer le PDF
+				</button>
+			</div>
+
+		</aside><!-- /#contrat-menu -->
+
+		<!-- ===== APERÇU DU DOCUMENT ===== -->
+		<div class="doc-wrapper">
+			<section>
+				<div class="doc-preview">
+					<div class="doc-preview-toolbar">
+						<span class="doc-preview-label">Aperçu du contrat</span>
+					</div>
+					<div class="doc-paper" id="pdf-doc-container">
+						<div class="doc-complete-page">
+							<div class="contract-title">
+								<h1>Contrat de location de matériel scénique</h1>
+							</div>
+	
+							<!-- Parties -->
+							<div class="parties-grid">
+								<div id="pdf-doc-company-data" class="party-block">
+									<p class="party-role">LE LOUEUR</p>
+									<p><span class="field-label">Raison sociale :</span><span class="field-value"></span></p>
+									<p><span class="field-label">Adresse :</span><span class="field-value">Non renseigné</span></p>
+									<p><span class="field-label">Téléphone :</span><span class="field-value">Non renseigné</span></p>
+									<p><span class="field-label">Courriel :</span><span class="field-value">Non renseigné</span></p>
+									<p><span class="field-label">SIRET :</span><span class="field-value">000 000 000</span></p>
+								</div>
+								<div id="pdf-doc-client-data" class="party-block">
+									<p class="party-role">LE LOCATAIRE</p>
+									<p><span class="field-label">Raison sociale :</span><span class="field-value"></span></p>
+									<p><span class="field-label">Adresse :</span><span class="field-value">Non renseigné</span></p>
+									<p><span class="field-label">Téléphone :</span><span class="field-value">Non renseigné</span></p>
+									<p><span class="field-label">Courriel :</span><span class="field-value">Non renseigné</span></p>
+									<p><span class="field-label">SIRET :</span><span class="field-value">000 000 000</span></p>
+								</div>
+							</div>
+	
+							<!-- Article 1 -->
+							<div class="article">
+								<h2>Article 1 - OBJET DU CONTRAT</h2>
+								<p>Le loueur met à disposition la liste suivante de matériel audio/scénique, pour une utilisation dans le cadre d'un événement unique, pour une durée effective de <strong id="doc-total-rental-time">24 heures</strong>.</p>
+							</div>
+	
+							<table>
+								<thead>
+									<tr>
+										<th scope="col">Désignation du matériel</th>
+										<th scope="col">Qté</th>
+										<th scope="col">Valeur unitaire TTC (€/24h)</th>
+										<th scope="col">État</th>
+									</tr>
+								</thead>
+								<tbody id="doc-stock-list-tbody">
+									<tr>
+										<td colspan="4" style="text-align:center;color:#888;font-style:italic;">Aucun lot sélectionné</td>
+									</tr>
+								</tbody>
+								<tfoot>
+									<tr>
+										<th scope="row" colspan="2">TOTAL TTC</th>
+										<td colspan="2"><strong id="doc-total-ttc">-</strong></td>
+									</tr>
+								</tfoot>
+							</table>
+	
+							<!-- Article 2 -->
+							<div class="article">
+								<h2>Article 2 - DURÉE ET CONDITIONS DE LOCATION</h2>
+								<p><span class="field-label">Date de mise à disposition :</span> <span id="pdf-doc-date-start">-</span></p>
+								<p><span class="field-label">Date et heure de restitution :</span> <span id="pdf-doc-date-end">-</span></p>
+								<p><span class="field-label">Lieu d'échange :</span> <span id="pdf-doc-address"></span></p>
+							</div>
+	
+							<!-- Article 3 -->
+							<div class="article">
+								<h2>Article 3 - PRIX ET MODALITÉS DE PAIEMENT</h2>
+								<p><span class="field-label">Montant total de la location :</span> <span id="doc-article3-total">-</span>.</p>
+								<p>Le paiement intégral est exigé avant toute livraison du matériel. Aucune mise à disposition ne sera effectuée sans réception du paiement complet (virement bancaire reçu ou espèces).</p>
+								<p>Une caution sera exigée conformément à l'article 7 du présent contrat.</p>
+							</div>
+	
+							<!-- Article 4 -->
+							<div class="article">
+								<h2>Article 4 - RESPONSABILITÉ</h2>
+								<p>Le locataire est seul responsable de l'usage qui sera fait du matériel loué pendant toute la durée de la mise à disposition. Le loueur ne saurait être tenu responsable des dommages causés à des tiers, ni des actes, propos ou comportements du locataire ou de ses collaborateurs, antérieurs et/ou lors de l'événement. Le locataire s'engage à utiliser le matériel conformément à sa destination et dans le respect des règles de sécurité en vigueur, depuis le moment où celui-ci est récupéré jusqu'à sa restitution. En cas de vol, de disparition ou de casse, le locataire sera tenu pour seul responsable.</p>
+							</div>
+	
+							<!-- Article 5 -->
+							<div class="article">
+								<h2>Article 5 - ANNULATION ET REMBOURSEMENT</h2>
+								<p>En cas d'annulation de l'événement ou de résiliation du présent contrat une fois le matériel acheminé vers le lieu de l'événement, aucun remboursement ne pourra être exigé par le locataire. Le paiement reste intégralement acquis au loueur. En cas d'annulation avant tout acheminement, les parties se rapprocheront pour convenir des modalités.</p>
+							</div>
+	
+							<!-- Article 6 -->
+							<div class="article">
+								<h2>Article 6 - CLAUSE DE CONFIDENTIALITÉ ET DE NON-ASSOCIATION</h2>
+								<p>Le locataire s'engage formellement à ne pas mentionner, citer, associer ou faire référence au loueur, à son nom, sa marque, son entreprise ou son matériel dans tout support de communication lié à l'événement, qu'il s'agisse d'affiches, de réseaux sociaux, de communiqués de presse, de crédits techniques, d'interviews ou de tout autre moyen de diffusion public. Toute violation de cette clause expose le locataire à des dommages et intérêts ; le loueur se réserve le droit d'engager toute poursuite judiciaire en cas de manquement aux exigences formulées dans le présent article.</p>
+							</div>
+	
+							<!-- Article 7 -->
+							<div class="article">
+								<h2>Article 7 - CAUTION</h2>
+								<p>Le loueur demandera une caution de <strong id="doc-caution-total">500,00 €</strong> afin de garantir l'intégrité du matériel. En cas de dommages sur l'un des éléments présentés à l'article 1, le loueur se réserve le droit de conserver une partie ou la totalité de ladite somme, selon le préjudice constaté lors de l'état des lieux à la restitution mentionnée à l'article 8. Dans le cas où aucun dégât n'est constaté, le locataire récupérera l'intégralité de sa caution.</p>
+							</div>
+	
+							<!-- Article 8 -->
+							<div class="article">
+								<h2>Article 8 - RESTITUTION DU MATÉRIEL</h2>
+								<p>La restitution du matériel se fera à la date et à l'heure convenues à l'article 2. À la remise des éléments loués présentés à l'article 1 au loueur par le locataire, un état des lieux sera réalisé en présence des deux parties. Celui-ci aboutira à la restitution de la caution en l'absence de dégâts constatés, ou à la conservation partielle ou totale de la caution par le loueur dans le cas contraire.</p>
+							</div>
+	
+							<!-- Signature -->
+							<div class="article">
+								<p>Fait en deux exemplaires originaux. Chaque partie reconnaît avoir pris connaissance de l'intégralité des clauses du présent contrat et les accepte sans réserve. Faire précéder la signature de la mention manuscrite <strong>« Lu et approuvé »</strong>.</p>
+								<p class="made-at">Fait le <span class="field-value" id="pdf-doc-date-redaction">-</span> à <span class="field-value" id="pdf-doc-redaction-location">-</span>.</p>
+							</div>
+	
+							<div class="signatures-grid">
+								<div class="signature-block">
+									<p class="party-role">Le Loueur</p>
+									<p>Nom et prénom : <span class="signature-line"></span></p>
+									<p>Qualité : <span class="signature-line"></span></p>
+									<p class="signature-mention"><em>Cachet et signature (précédé de « Lu et approuvé ») :</em></p>
+									<div class="signature-area"></div>
+								</div>
+								<div class="signature-block">
+									<p class="party-role">Le Locataire</p>
+									<p>Nom et prénom : <span class="signature-line"></span></p>
+									<p>Qualité : <span class="signature-line"></span></p>
+									<p class="signature-mention"><em>Cachet et signature (précédé de « Lu et approuvé ») :</em></p>
+									<div class="signature-area"></div>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Annexe -->
+						<div class="article annexe doc-complete-page">
+							<h2>ANNEXE 1 - ÉTAT DES LIEUX DU MATÉRIEL MIS EN LOCATION</h2>
+							
+							<div id="doc-annexe-content">
+								<ul id="annexe-1-stock-list">
+									<li id="doc-annexe-content">
+										<p style="color:#888;font-style:italic;">Les éléments de l'annexe seront générés à partir des lots sélectionnés.</p>
+									</li>
+								</ul>
+								<br>
+								<p>En signant, les deux parties acceptent le présent état des lieux à la remise du matériel au locataire. Aucune contestation ne pourra être fait à postériori vis à vis de l'état du matériel à la signature de cette annexe.</p>
+								<div class="signatures-grid">
+										<div class="signature-block">
+											<p class="party-role">Le Loueur</p>
+											<p>Nom et prénom : <span class="signature-line"></span></p>
+											<p>Qualité : <span class="signature-line"></span></p>
+											<p class="signature-mention"><em>Cachet et signature (précédé de « Lu et approuvé ») :</em></p>
+											<div class="signature-area"></div>
+										</div>
+										<div class="signature-block">
+											<p class="party-role">Le Locataire</p>
+											<p>Nom et prénom : <span class="signature-line"></span></p>
+											<p>Qualité : <span class="signature-line"></span></p>
+											<p class="signature-mention"><em>Cachet et signature (précédé de « Lu et approuvé ») :</em></p>
+											<div class="signature-area"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<hr/>
+							<div class="article annexe doc-complete-page">
+								<h2>ANNEXE 2 - ÉTAT DES LIEUX DU MATÉRIEL MIS EN LOCATION À LA RESTITUTION</h2>
+								<div id="doc-annexe-content">
+									<p class="annexe-footer"><em>La présente annexe est indissociable du contrat et en constitue une partie intégrante. Les deux parties en confirment la lecture et l'exactitude par leur signature figurant en page principale.</em></p>						
+									<ul id="annexe-2-stock-list">
+										<li id="doc-annexe-content">
+											<p style="color:#888;font-style:italic;">Les éléments de l'annexe seront générés à partir des lots sélectionnés.</p>
+										</li>
+									</ul>
+									<br>
+									<p>En signant, les deux parties acceptent le présent état des lieux à la restitution du matériel par le locataire. Aucune contestation ne pourra être fait à postériori vis à vis de l'état du matériel à la signature de cette annexe.</p>
+									<br>
+									<div class="signatures-grid">
+										<div class="signature-block">
+											<p class="party-role">Le Loueur</p>
+											<p>Nom et prénom : <span class="signature-line"></span></p>
+											<p>Qualité : <span class="signature-line"></span></p>
+											<p class="signature-mention"><em>Cachet et signature (précédé de « Lu et approuvé ») :</em></p>
+											<div class="signature-area"></div>
+										</div>
+										<div class="signature-block">
+											<p class="party-role">Le Locataire</p>
+											<p>Nom et prénom : <span class="signature-line"></span></p>
+											<p>Qualité : <span class="signature-line"></span></p>
+											<p class="signature-mention"><em>Cachet et signature (précédé de « Lu et approuvé ») :</em></p>
+											<div class="signature-area"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div><!-- /.doc-paper -->
+				</div><!-- /.doc-preview -->
+			</section>
+		</div><!-- /.doc-wrapper -->
 
 	</main>
-	<footer>
-		
-	</footer>
+	<footer></footer>
+
+	<script src="/pdf/main.js"></script>
 </body>
 
 </html>

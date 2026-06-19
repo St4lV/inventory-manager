@@ -25,4 +25,7 @@ router.use("/company", company_endpoint);
 const client_endpoint = require("./client/endpoint")
 router.use("/client", client_endpoint);
 
+const pdf_endpoint = require("./pdf/endpoint")
+router.use("/pdf", pdf_endpoint);
+
 module.exports = router;

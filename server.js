@@ -51,8 +51,13 @@ app.get('/stock/', async (req, res) => {
 app.get('/pdf/main.js', async (req, res) => {
 	return res.status(200).sendFile('main.js', { root: __dirname + "/client/pdf/" });
 });
+
 app.get('/pdf/style.css', async (req, res) => {
 	return res.status(200).sendFile('style.css', { root: __dirname + "/client/pdf/" });
+});
+
+app.get('/pdf/pdf.css', async (req, res) => {
+	return res.status(200).sendFile('pdf.css', { root: __dirname + "/client/pdf/" });
 });
 
 app.get('/pdf/', async (req, res) => {
