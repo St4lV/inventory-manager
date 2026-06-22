@@ -75,7 +75,7 @@ const svg = {
 };
 
 const menu_search_select_tags = document.querySelector("#menu-search-select-tags");
-const product_input_search = document.getElementById("menu-search-input-search");
+const product_input_search = document.querySelector("#menu-search-input-search");
 const element_viewer = document.querySelector("#element-viewer");
 
 let product_list = [];
@@ -368,7 +368,7 @@ function displayElementViewer(mode = "item", data = {}) {
 		document.querySelector('main').setAttribute('aria-hidden', 'true');
 		document.querySelector('header').setAttribute('aria-hidden', 'true');
 		document.querySelector('footer').setAttribute('aria-hidden', 'true');
-		const content = document.getElementById('element-viewer-content');
+		const content = document.querySelector('#element-viewer-content');
 		if (content) {
 			content.focus();
 			trapFocus(content);
@@ -445,11 +445,11 @@ function displayElementViewer(mode = "item", data = {}) {
 
 		bindCloseAndConfirm(async () => {
 			const body = {
-				new_name: document.getElementById('edit-company-name').value,
-				new_address: document.getElementById('edit-company-address').value,
-				new_tel: document.getElementById('edit-company-tel').value,
-				new_email: document.getElementById('edit-company-email').value,
-				new_siren: document.getElementById('edit-company-siren').value,
+				new_name: document.querySelector('#edit-company-name').value,
+				new_address: document.querySelector('#edit-company-address').value,
+				new_tel: document.querySelector('#edit-company-tel').value,
+				new_email: document.querySelector('#edit-company-email').value,
+				new_siren: document.querySelector('#edit-company-siren').value,
 			};
 			await HTTPRequest.put('/api/v1/company/', body);
 			closeViewer();
@@ -492,17 +492,22 @@ function displayElementViewer(mode = "item", data = {}) {
 					<label for="edit-client-siren">SIREN</label>
 					<input type="text" id="edit-client-siren" placeholder="000 000 000" inputmode="numeric">
 				</div>
+				<div id="edit-client-is-entity-container" class="settings-form-field">
+					<label for="edit-client-is-entity">Est une structure juridique : </label>
+					<input type="checkbox" id="edit-client-is-entity" "checked">
+				</div>
 			</fieldset>
 		</div>
 		`;
 
 		bindCloseAndConfirm(async () => {
 			const body = {
-				name: document.getElementById('edit-client-name').value,
-				address: document.getElementById('edit-client-address').value,
-				tel: document.getElementById('edit-client-tel').value,
-				email: document.getElementById('edit-client-email').value,
-				siren: document.getElementById('edit-client-siren').value,
+				name: document.querySelector('#edit-client-name').value,
+				address: document.querySelector('#edit-client-address').value,
+				tel: document.querySelector('#edit-client-tel').value,
+				email: document.querySelector('#edit-client-email').value,
+				siren: document.querySelector('#edit-client-siren').value,
+				is_entity: document.querySelector('#edit-client-is-entity').checked,
 			};
 			await HTTPRequest.post('/api/v1/client/', body);
 			closeViewer();
@@ -576,12 +581,12 @@ function displayElementViewer(mode = "item", data = {}) {
 				email: selected_client.email,
 				siren: selected_client.siren,
 				is_entity: selected_client.is_entity,
-				new_name: document.getElementById('edit-client-name').value,
-				new_address: document.getElementById('edit-client-address').value,
-				new_tel: document.getElementById('edit-client-tel').value,
-				new_email: document.getElementById('edit-client-email').value,
-				new_siren: document.getElementById('edit-client-siren').value,
-				new_is_entity: document.getElementById('edit-client-is-entity').checked,
+				new_name: document.querySelector('#edit-client-name').value,
+				new_address: document.querySelector('#edit-client-address').value,
+				new_tel: document.querySelector('#edit-client-tel').value,
+				new_email: document.querySelector('#edit-client-email').value,
+				new_siren: document.querySelector('#edit-client-siren').value,
+				new_is_entity: document.querySelector('#edit-client-is-entity').checked,
 			};
 			await HTTPRequest.put('/api/v1/client/', body);
 			closeViewer();
@@ -589,7 +594,7 @@ function displayElementViewer(mode = "item", data = {}) {
 			await displayElements();
 		});
 
-		document.getElementById('btn-delete-client').addEventListener('click', () => {
+		document.querySelector('#btn-delete-client').addEventListener('click', () => {
 			showDeleteModal(`Supprimer le client « ${selected_client.name} » ? Cette action est irréversible.`, async () => {
 				await HTTPRequest.delete('/api/v1/client/', {
 					name: selected_client.name,
@@ -630,7 +635,7 @@ function displayElementViewer(mode = "item", data = {}) {
 
 		bindCloseAndConfirm(async () => {
 			await HTTPRequest.post('/api/v1/owner/', {
-				label: document.getElementById('edit-owner-label').value,
+				label: document.querySelector('#edit-owner-label').value,
 			});
 			closeViewer();
 			await refreshData();
@@ -676,14 +681,14 @@ function displayElementViewer(mode = "item", data = {}) {
 		bindCloseAndConfirm(async () => {
 			await HTTPRequest.put('/api/v1/owner/', {
 				label: selected_owner.label,
-				new_label: document.getElementById('edit-owner-label').value,
+				new_label: document.querySelector('#edit-owner-label').value,
 			});
 			closeViewer();
 			await refreshData();
 			await displayElements();
 		});
 
-		document.getElementById('btn-delete-owner').addEventListener('click', () => {
+		document.querySelector('#btn-delete-owner').addEventListener('click', () => {
 			showDeleteModal(`Supprimer le propriétaire « ${selected_owner.label} » ?`, async () => {
 				await HTTPRequest.delete(`/api/v1/owner/?label=${encodeURIComponent(selected_owner.label)}`);
 				closeViewer();
@@ -721,8 +726,8 @@ function displayElementViewer(mode = "item", data = {}) {
 
 		bindCloseAndConfirm(async () => {
 			await HTTPRequest.post('/api/v1/location/', {
-				label: document.getElementById('edit-location-label').value,
-				address: document.getElementById('edit-location-address').value,
+				label: document.querySelector('#edit-location-label').value,
+				address: document.querySelector('#edit-location-address').value,
 			});
 			closeViewer();
 			await refreshData();
@@ -773,15 +778,15 @@ function displayElementViewer(mode = "item", data = {}) {
 			await HTTPRequest.put('/api/v1/location/', {
 				label: selected_location.label,
 				address: selected_location.address,
-				new_label: document.getElementById('edit-location-label').value,
-				new_address: document.getElementById('edit-location-address').value,
+				new_label: document.querySelector('#edit-location-label').value,
+				new_address: document.querySelector('#edit-location-address').value,
 			});
 			closeViewer();
 			await refreshData();
 			await displayElements();
 		});
 
-		document.getElementById('btn-delete-location').addEventListener('click', () => {
+		document.querySelector('#btn-delete-location').addEventListener('click', () => {
 			showDeleteModal(`Supprimer l'emplacement « ${selected_location.label} » ?`, async () => {
 				await HTTPRequest.delete(`/api/v1/location/?label=${encodeURIComponent(selected_location.label)}&address=${encodeURIComponent(selected_location.address)}`);
 				closeViewer();
@@ -815,7 +820,7 @@ function displayElementViewer(mode = "item", data = {}) {
 
 		bindCloseAndConfirm(async () => {
 			await HTTPRequest.post('/api/v1/tag/', {
-				label: document.getElementById('edit-tag-label').value,
+				label: document.querySelector('#edit-tag-label').value,
 			});
 			closeViewer();
 			await refreshData();
@@ -861,14 +866,14 @@ function displayElementViewer(mode = "item", data = {}) {
 		bindCloseAndConfirm(async () => {
 			await HTTPRequest.put('/api/v1/tag/', {
 				label: selected_tag.label,
-				new_label: document.getElementById('edit-tag-label').value,
+				new_label: document.querySelector('#edit-tag-label').value,
 			});
 			closeViewer();
 			await refreshData();
 			await displayElements();
 		});
 
-		document.getElementById('btn-delete-tag').addEventListener('click', () => {
+		document.querySelector('#btn-delete-tag').addEventListener('click', () => {
 			showDeleteModal(`Supprimer l'étiquette « ${selected_tag.label} » ?`, async () => {
 				await HTTPRequest.delete(`/api/v1/tag/?label=${encodeURIComponent(selected_tag.label)}`);
 				closeViewer();
