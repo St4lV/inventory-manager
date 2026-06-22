@@ -7,12 +7,6 @@ const express_values = {
     api_version : process.env.EXPRESS_API_VERSION,
 }
 
-const mongo_db_values = {
-	server : process.env.MONGODB_SERVER,
-	port : process.env.MONGODB_PORT,
-	database: process.env.MONGODB_DATABASE,
-}
-
 const postgres_values = {
 	user : process.env.POSTGRES_USER,
 	password : process.env.POSTGRES_PASSWORD,
@@ -21,4 +15,13 @@ const postgres_values = {
 	database : process.env.POSTGRES_DATABASE,
 }
 
-module.exports = { express_values, mongo_db_values, postgres_values }
+const nextcloud_values = {
+	server : process.env.NEXTCLOUD_SERVER_URL,
+	credentials : {
+		login : process.env.NEXTCLOUD_EMAIL,
+		password : process.env.NEXTCLOUD_APP_PASSWORD,
+	},
+	calendar : process.env.NEXTCLOUD_RENTAL_CAL,
+}
+
+module.exports = { express_values, postgres_values, nextcloud_values }

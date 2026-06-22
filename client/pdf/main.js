@@ -498,10 +498,30 @@ async function bindActions() {
 			alert("Veuillez ajouter au moins un lot avant de générer le contrat.");
 			return;
 		}
+
+		if (confirm("Sauvegarder l'événement sur Nextcloud ?")) {
+			const address_span = document.querySelector("#pdf-doc-address");
+
+			const event_desc = act_pdf._stock_list.map((i) => `${i.label} x ${i.count}`).join('\n');
+			const event_client = client_list.find((c) => c.siren === sel_client.value);
+			
+			const sended_event = {
+				start: new Date(date_start.value),
+				end: new Date(date_end.value),
+				summary: `Location ${event_client.name}`,
+				description: event_desc,
+				location: address_span.innerText,
+				allDay: false,
+			}
+			
+			await new HTTPRequest("/api/v1/client/caldav").post({event:sended_event});
+		};
+
 		const pdf_doc = document.querySelector("#pdf-doc-container").innerHTML;
 		const pdf_css = (await new HTTPRequest("/pdf/pdf.css").getText()).data;
 	
 		await new HTTPRequest("/api/v1/pdf").postDisplayGeneratedFile({ html: pdf_doc, css: pdf_css });
+		
 	});
 
 	document.querySelector("#btn-reset").addEventListener("click", () => {
@@ -646,12 +666,6 @@ function escapeHtml(str) {
 		.replace(/</g, "&lt;")
 		.replace(/>/g, "&gt;");
 }
-
-window.addEventListener("afterprint", () => {
-	if (confirm("Contrat généré. Réinitialiser le formulaire pour un nouveau contrat ?")) {
-		emptyDraft();
-	}
-});
 
 (async () => {
 	await refreshData();
