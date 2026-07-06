@@ -73,6 +73,8 @@ class Location {
 			log.error(location);
 			return { code: 500, data: "Internal server error" };
 		}
+		this.label = new_label;
+		this.address = new_address;
 		return location;
 	}
 
@@ -116,6 +118,18 @@ class Location {
 			log.error(error);
 			return false;
 		}
+	}
+
+	_mutate() {
+		const mutators = {
+			label: (v) => `${v} modified`,
+			address: (v) => `${v} modified`,
+		};
+	
+		return {
+			label : mutators.label(this.label),
+			address : mutators.address(this.address)
+		};
 	}
 }
 

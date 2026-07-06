@@ -83,6 +83,8 @@ class Tag {
 			log.error(tag);
 			return { code: 500, data: "Internal server error" };
 		}
+		
+		this.label = new_label;
 		return tag;
 	}
 
@@ -126,6 +128,16 @@ class Tag {
 			log.error(error);
 			return false;
 		}
+	}
+
+	_mutate() {
+		const mutators = {
+			label: (v) => `${v} modified`,
+		};
+	
+		return {
+			label : mutators.label(this.label)
+		};
 	}
 }
 

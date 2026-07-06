@@ -98,6 +98,11 @@ class Item {
 			log.error(result);
 			return { code: 500, data: "Internal server error" };
 		}
+		this.label = new_label;
+		this.img_url = new_img_url;
+		this.description = new_description;
+		this.reference = new_reference;
+		this.tags = new_tags; 
 		return result;
 	}
 
@@ -166,6 +171,24 @@ class Item {
 			}
 		}
 		return ids;
+	}
+
+	_mutate() {
+
+		const mutators = {
+			label: (v) => `${v}_modified`,
+			img_url: (v) => `${v}.png`,
+			description : (v) =>`${v} modified`,
+			reference : (v) => `${v}_modified`
+		};
+	
+		return {
+			label : mutators.label(this.label),
+			img_url : mutators.img_url(this.img_url),
+			description : mutators.description(this.description),
+			reference : mutators.reference(this.reference),
+			tags : []
+		};
 	}
 }
 

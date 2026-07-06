@@ -127,6 +127,21 @@ class Stock {
 				]);
 
 				if (result.rowCount>0) {
+
+					this.label = new_label;
+					this.tax_rate = new_tax_rate;
+					this.tax_set = new_tax_set;
+					this.purchase_price = new_purchase_price;
+					this.purchase_date = convertDateToDBFormat(new_purchase_date);
+					this.count = new_count;
+					this.item_data = new_item_data;
+					this.condition_data = new_condition_data;
+					this.location_data = new_location_data;
+					this.owner_data = new_owner_data;
+					this.rental_price = new_rental_price; 
+					this.specification = new_specification;
+					this.second_hand = new_second_hand;
+					
 					return { code: 200, data: "OK" };
 				}
 				return { code : 404, data : "Not found in database" };
@@ -210,6 +225,36 @@ class Stock {
 		}
 
 		return result;
+	}
+
+	_mutate() {
+		
+		const mutators = {
+			label: (v) => `${v} modified`,
+			tax_rate: (v) => v+1,
+			tax_set: (v) => !v,
+			purchase_price: (v) => v+1,
+			count: (v) => v+1,
+			rental_price: (v) => v+1,
+			specification: (v) => `${v} modified`,
+			second_hand: (v) => !v,
+		};
+	
+		return {
+			label : mutators.label(this.label),
+			tax_rate : mutators.tax_rate(this.tax_rate),
+			tax_set : mutators.tax_set(this.tax_set),
+			purchase_price : mutators.purchase_price(this.purchase_price),
+			purchase_date : convertDateToDBFormat(new Date(Date.now()+10_000)),
+			count : mutators.count(this.count),
+			item_data : this.item_data,
+			condition_data : this.condition_data,
+			location_data : this.location_data,
+			owner_data : this.owner_data,
+			rental_price : mutators.rental_price(this.rental_price), 
+			specification : mutators.specification(this.specification),
+			second_hand : mutators.second_hand(this.second_hand),
+		};
 	}
 }
 

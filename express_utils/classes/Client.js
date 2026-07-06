@@ -87,6 +87,14 @@ class Client {
 			log.error(client.data);
 			return { code: 500, data: "Internal server error" };
 		}
+
+		this.name = new_name;
+		this.address = new_address;
+		this.tel = new_tel;
+		this.email = new_email;
+		this.siren = new_siren;
+		this.is_entity = new_is_entity; 
+
 		return client;
 	}
 
@@ -130,6 +138,30 @@ class Client {
 			log.error(error);
 			return false;
 		}
+	}
+
+	_mutate() {
+		const mutators = {
+			name: (v) => `${v}_modified`,
+			address: (v) => `${v} bis`,
+			tel: (v) => v.slice(0, -1) + (v.endsWith('9') ? '0' : '9'),
+			email: (v) => v.replace('@', '.test@'),
+			siren: (v) => {
+				const digits = v.split('');
+				digits[8] = digits[8] === '9' ? '0' : '9';
+				return digits.join('');
+			},
+			is_entity: (v) => !v,
+		};
+	
+		return {
+			name: mutators.name(this.name),
+			address: mutators.address(this.address),
+			tel: mutators.tel(this.tel),
+			email: mutators.email(this.email),
+			siren : mutators.siren(this.siren),
+			is_entity: mutators.is_entity(this.is_entity),
+		};
 	}
 }
 

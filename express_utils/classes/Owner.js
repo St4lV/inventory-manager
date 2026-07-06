@@ -72,6 +72,8 @@ class Owner {
 			log.error(owner);
 			return { code: 500, data: "Internal server error" };
 		}
+
+		this.label = new_label
 		return owner;
 	}
 
@@ -115,6 +117,16 @@ class Owner {
 			log.error(error);
 			return false;
 		}
+	}
+
+	_mutate() {
+		const mutators = {
+			label: (v) => `${v} modified`,
+		};
+	
+		return {
+			label : mutators.label(this.label)
+		};
 	}
 }
 
