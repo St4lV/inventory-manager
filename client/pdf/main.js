@@ -135,6 +135,10 @@ class PDF_1 {
 				console.error(obj.label, " déjà dans la liste");
 				return;
 			}
+			
+			if (obj.available_count === undefined) {
+				obj.available_count = obj.count;
+			}
 			this._stock_list.push(obj);
 			this.stock._updateDoc();
 		},
@@ -199,28 +203,31 @@ class PDF_1 {
 			let annexe_1_dom = "";
 			let annexe_2_dom = "";
 
-			for (const i of this._stock_list) {
+			this._stock_list.forEach((i, idx) => {
 				const prix = formatPrix(i.rental_price);
+
+				const max = parseInt(i.available_count ?? i.count ?? 1);
+				const value = parseInt(i.count ?? max);
 
 				menu_dom += `<tr>
 					<th scope="row">
 						<span class="lot-label-main">${escapeHtml(i.label)}</span>
 						<span class="lot-label-sub">${escapeHtml(i.item_data?.label ?? "")}</span>
 					</th>
-					<td>${ parseInt(i.count) === 1 ? escapeHtml(String(i.count)) :
-					'<input type="number" min="1" max="' + parseInt(i.count ?? 1) +'" value="' + parseInt(i.count ?? 1) + '"/>'}</td>
+					<td>${ max === 1 ? escapeHtml(String(value)) :
+					'<input class="lot-count-selector" type="number" min="1" max="' + max +'" value="' + value + '" data-lot-index="' + idx + '"/>'}</td>
 					<td>${prix}</td>
 					<td>${escapeHtml(i.condition_data?.label ?? "-")}</td>
 					<td>
-						<button class="btn-remove-lot" data-remove-label="${escapeHtml(i.label)}" type="button" aria-label="Retirer ${escapeHtml(i.label)}">
+						<button class="btn-remove-lot" data-remove-index="${idx}" type="button" aria-label="Retirer ${escapeHtml(i.label)}">
 							${svg.close}
 						</button>
 					</td>
 				</tr>`;
 
-				doc_dom += `<tr>
+				doc_dom += `<tr data-lot-index="${idx}">
 					<th scope="row">${escapeHtml(i.label)}</th>
-					<td>${escapeHtml(String(i.count ?? 1))}</td>
+					<td class="doc-lot-count">${escapeHtml(String(value))}</td>
 					<td>${prix}</td>
 					<td>${escapeHtml(i.condition_data?.label ?? "-")}</td>
 				</tr>`;
@@ -243,7 +250,7 @@ class PDF_1 {
 				</li>
 				<hr>`;
 
-			}
+			});
 
 			menu_tbody.innerHTML = menu_dom;
 			doc_tbody.innerHTML  = doc_dom;
@@ -256,6 +263,18 @@ class PDF_1 {
 }
 
 const draft_key = "contrat_draft_v1";
+
+function stockKey(s = {}) {
+	return [
+		s.label,
+		s.item_data?.reference ?? s.item_data?.label ?? "",
+		s.condition_data?.label ?? "",
+		s.location_data?.label ?? "",
+		s.purchase_date ?? "",
+		s.purchase_price ?? "",
+	].join("||");
+}
+
 
 function formatPrix(val) {
 	const n = Number(val);
@@ -282,13 +301,13 @@ function saveDraft() {
 			location:     document.querySelector("#menu-select-location")?.value ?? null,
 			date_start,
 			date_end,
-			stock_labels: act_pdf._stock_list.map(s => s.label),
+			stock_keys: act_pdf._stock_list.map(s => stockKey(s)),
 			time_total: (date_start && date_end)
 				? (new Date(date_end) - new Date(date_start)) / (1000 * 60 * 60)
 				: null
 		};
 		
-		const hasDonnees = draft.stock_labels.length > 0
+		const hasDonnees = draft.stock_keys.length > 0
 			|| (draft.client_siren && draft.client_siren !== "none")
 			|| (draft.location && draft.location !== "none")
 			|| draft.date_start
@@ -349,7 +368,12 @@ function restoreDraft() {
 			rental_time = b.time_total;
 		}
 
-		if (Array.isArray(b.stock_labels)) {
+		if (Array.isArray(b.stock_keys)) {
+			for (const key of b.stock_keys) {
+				const stock = stock_list.find(s => stockKey(s) === key);
+				if (stock) act_pdf.stock.add(stock);
+			}
+		} else if (Array.isArray(b.stock_labels)) {
 			for (const label of b.stock_labels) {
 				const stock = stock_list.find(s => s.label === label);
 				if (stock) act_pdf.stock.add(stock);
@@ -448,10 +472,48 @@ async function bindActions() {
 	menu_stock_list.addEventListener("click", (e) => {
 		const btn = e.target.closest(".btn-remove-lot");
 		if (!btn) return;
-		const label = btn.dataset.removeLabel;
-		const item  = act_pdf._stock_list.find(s => s.label === label);
+		const index = parseInt(btn.dataset.removeIndex, 10);
+		const item  = act_pdf._stock_list[index];
 		if (item) act_pdf.stock.remove(item);
 	});
+
+	menu_stock_list.addEventListener("input", (e) => {
+		const input = e.target.closest(".lot-count-selector");
+		if (!input) return;
+
+		const index = parseInt(input.dataset.lotIndex, 10);
+		const item  = act_pdf._stock_list[index];
+		if (!item) return;
+
+		const value = parseInt(input.value, 10);
+		if (isNaN(value)) return;
+
+		item.count = value;
+
+		const doc_cell = document.querySelector(
+			`#doc-stock-list-tbody tr[data-lot-index="${index}"] .doc-lot-count`
+		);
+		if (doc_cell) doc_cell.textContent = value;
+	});
+
+	menu_stock_list.addEventListener("change", (e) => {
+		const input = e.target.closest(".lot-count-selector");
+		if (!input) return;
+
+		const index = parseInt(input.dataset.lotIndex, 10);
+		const item  = act_pdf._stock_list[index];
+		if (!item) return;
+
+		const max = parseInt(input.max, 10) || 1;
+		let value = parseInt(input.value, 10);
+		if (isNaN(value) || value < 1) value = 1;
+		if (value > max) value = max;
+		input.value = value;
+
+		item.count = value;
+		act_pdf.stock._updateDoc();
+	});
+
 
 	const date_start = document.querySelector("#menu-date-start");
 	const date_end = document.querySelector("#menu-date-end");
