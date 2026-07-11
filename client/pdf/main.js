@@ -99,6 +99,7 @@ class HTTPRequest {
 class PDF_1 {
 	constructor() {
 		this._stock_list = [];
+		this._total_price = 0;
 	}
 
 	setCompany() {
@@ -189,6 +190,7 @@ class PDF_1 {
 			}
 			const total = this._stock_list.reduce((sum, i) => sum + (Number(i.rental_price) || 0), 0);
 			const totalFormate = formatPrix(total * (rental_time / 24).toFixed(0));
+			this._total_price = totalFormate;
 
 			lot_badge.textContent = this._stock_list.length;
 
@@ -570,13 +572,13 @@ async function bindActions() {
 			const sended_event = {
 				start: new Date(date_start.value),
 				end: new Date(date_end.value),
-				summary: `Location ${event_client.name}`,
+				summary: `Location ${event_client.name} [${act_pdf._total_price}€]`,
 				description: event_desc,
 				location: address_span.innerText,
 				allDay: false,
 			}
 			
-			await new HTTPRequest("/api/v1/client/caldav").post({event:sended_event});
+			await new HTTPRequest("/api/v1/caldav").post({event:sended_event});
 		};
 
 		const pdf_doc = document.querySelector("#pdf-doc-container").innerHTML;

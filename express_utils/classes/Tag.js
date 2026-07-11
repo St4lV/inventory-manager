@@ -101,14 +101,14 @@ class Tag {
 			const query = `DELETE FROM inventory.tag WHERE label = $1;`;
 			try {
 				const result = await pool.query(query, [this.label]);
-				return { code: 200, data: "OK" };
+				return { code: 204, data: "OK" };
 			} catch (error) {
 				return { code: 500, data: error };
 			}
 		}
 
 		const tag = await _SQLquery();
-		if (tag.code !== 200) {
+		if (tag.code !== 204) {
 			log.error(tag.data);
 			return { code: 500, data: "Internal server error" };
 		}

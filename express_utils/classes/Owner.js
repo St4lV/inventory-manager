@@ -90,14 +90,14 @@ class Owner {
 			const query = `DELETE FROM inventory.owner WHERE label = $1;`;
 			try {
 				const result = await pool.query(query, [this.label]);
-				return { code: 200, data: "OK" };
+				return { code: 204, data: "OK" };
 			} catch (error) {
 				return { code: 500, data: error };
 			}
 		}
 
 		const owner = await _SQLquery();
-		if (owner.code !== 200) {
+		if (owner.code !== 204) {
 			log.error(owner.data);
 			return { code: 500, data: "Internal server error" };
 		}

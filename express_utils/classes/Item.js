@@ -119,14 +119,14 @@ class Item {
 			const query = `DELETE FROM inventory.item WHERE label = $1 AND img_url = $2 AND description = $3 AND reference = $4;`;
 			try {
 				await pool.query(query, [this.label, this.img_url, this.description, this.reference]);
-				return { code: 200, data: "OK" };
+				return { code: 204, data: "OK" };
 			} catch (error) {
 				return { code: 500, data: error };
 			}
 		};
 
 		const result = await _SQLquery();
-		if (result.code !== 200) {
+		if (result.code !== 204) {
 			log.error(result.data);
 			return { code: 500, data: "Internal server error" };
 		}

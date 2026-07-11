@@ -8,6 +8,7 @@ const Location = require("../express_utils/classes/Location");
 const Owner = require("../express_utils/classes/Owner");
 const Stock = require("../express_utils/classes/Stock");
 const Tag = require("../express_utils/classes/Tag");
+const Calendar = require("../express_utils/classes/Calendar");
 
 const test_error_list = [];
 
@@ -26,6 +27,8 @@ const api_tests = async () => {
     
 	// CONFIG TEST VALUES
 
+	const caldav_vals = { start: new Date(Date.now()), end: new Date(Date.now() + (1000  * 3600 * 24)), summary: "Location TEST [100.00€]", description: "Test item x1\nTest item2 x3", location: "42 rue de la Paix, Paris (75000)",allDay: false,}
+
 	const client_vals = { name: "Test", address: "42 rue de la Paix, Paris (75000)", tel: "+33123456789", email: "test@domain.com", siren: "123456789", is_entity: false };
 
 	const item_vals = {label:'Test item',img_url:'/assets/test.svg',description:'Item description text',reference:"test_item_"+Date.now(),tags:[tag_list.data[0].label]};
@@ -39,6 +42,7 @@ const api_tests = async () => {
 	const tag_vals = {label:"Test tag"};
 
 	const api_classes_obj = {
+		caldav: new Calendar(caldav_vals),
         client: new Client(client_vals.name, client_vals.address, client_vals.tel, client_vals.email, client_vals.siren, client_vals.is_entity),
         condition: new Condition(),
 		item: new Item(item_vals.label,item_vals.img_url,item_vals.description,item_vals.reference,item_vals.tags),
@@ -76,7 +80,7 @@ const api_tests = async () => {
 
 		if (typeof instance.delete === 'function'){
 			const test_delete = await instance.delete();
-			ouputFormatter(200,test_delete,name,"DELETE")
+			ouputFormatter(204,test_delete,name,"DELETE")
 		}
     }
 	log.debug("-----")

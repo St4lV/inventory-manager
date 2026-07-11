@@ -91,14 +91,14 @@ class Location {
 			const query = `DELETE FROM inventory.location WHERE label = $1 AND address = $2;`;
 			try {
 				const result = await pool.query(query, [this.label, this.address]);
-				return { code: 200, data: "OK" };
+				return { code: 204, data: "OK" };
 			} catch (error) {
 				return { code: 500, data: error };
 			}
 		}
 
 		const location = await _SQLquery();
-		if (location.code !== 200) {
+		if (location.code !== 204) {
 			log.error(location.data);
 			return { code: 500, data: "Internal server error" };
 		}

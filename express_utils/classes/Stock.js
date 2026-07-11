@@ -170,7 +170,7 @@ class Stock {
 			const query = `DELETE FROM inventory.stock WHERE id = $1;`;
 			try {
 				await pool.query(query, [this.id]);
-				return { code: 200, data: "OK" };
+				return { code: 204, data: "OK" };
 			} catch (error) {
 				log.error(error)
 				return { code: 500, data: error };
@@ -178,7 +178,7 @@ class Stock {
 		};
 
 		const stock = await _SQLquery();
-		if (stock.code !== 200) {
+		if (stock.code !== 204) {
 			log.error(stock.data);
 			return { code: 500, data: "Internal server error" };
 		}

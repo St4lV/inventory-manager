@@ -111,14 +111,14 @@ class Client {
 			const query = `DELETE FROM inventory.client WHERE id = $1;`;
 			try {
 				const result = await pool.query(query, [this.id]);
-				return { code: 200, data: "OK" };
+				return { code: 204, data: "OK" };
 			} catch (error) {
 				return { code: 500, data: "Internal server error" };
 			}
 		}
 
 		const client = await _SQLquery();
-		if (client.code !== 200) {
+		if (client.code !== 204) {
 			log.error(client.data);
 			return { code: 500, data: "Internal server error" };
 		}
