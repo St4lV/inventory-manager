@@ -606,70 +606,19 @@ function displayGraphDonut(list = [], filter_param = "", tag_id = "", colors = [
 /* ===========================
    Liste des locations
    =========================== */
-const rentalDateFormatter = new Intl.DateTimeFormat('fr-FR', {
-	day: 'numeric', month: 'long', year: 'numeric',
-	hour: '2-digit', minute: '2-digit',
-});
-
-function isValidDate(d) {
-	return d instanceof Date && !Number.isNaN(d.getTime());
-}
-
-function formatRentalDate(date) {
-	return isValidDate(date) ? rentalDateFormatter.format(date) : 'Date inconnue';
-}
-
-function isoAttr(date) {
-	return isValidDate(date) ? date.toISOString() : '';
-}
-
-/**
- * Rendu unifié d'une location : même gabarit pour les listes à venir et passées,
- * seul l'état (badge + modificateur de classe) change.
- */
-function renderRentalItem(event, status) {
-	const start = new Date(event.start);
-	const end = new Date(event.end);
-
-	const badges = {
-		live: { label: 'En cours', modifier: 'rental-badge--live' },
-		upcoming: { label: 'À venir', modifier: 'rental-badge--upcoming' },
-		past: { label: 'Terminée', modifier: 'rental-badge--past' },
-	};
-	const badge = badges[status];
-
-	const name = escapeHtml(event.name || 'Location sans intitulé');
-	const place = escapeHtml(event.location || 'Non renseigné');
-
-	return `
-	<li class="rental-item rental-item--${status}">
-		<div class="rental-item-head">
-			<h4 class="rental-item-title">${name}</h4>
-			<span class="rental-badge ${badge.modifier}">${badge.label}</span>
-		</div>
-		<dl class="rental-item-meta">
-			<div class="rental-meta-row">
-				<dt>Lieu d'échange</dt>
-				<dd>${place}</dd>
-			</div>
-			<div class="rental-meta-row">
-				<dt>Début</dt>
-				<dd><time datetime="${isoAttr(start)}">${escapeHtml(formatRentalDate(start))}</time></dd>
-			</div>
-			<div class="rental-meta-row">
-				<dt>Fin</dt>
-				<dd><time datetime="${isoAttr(end)}">${escapeHtml(formatRentalDate(end))}</time></dd>
-			</div>
-		</dl>
-	</li>`;
-}
 
 async function displayRentalList() {
-	const calendar_data_fetch = await new HTTPRequest("/api/v1/caldav").get();
+	
+	const rentalDateFormatter = new Intl.DateTimeFormat('fr-FR', {
+		day: 'numeric', month: 'long', year: 'numeric',
+		hour: '2-digit', minute: '2-digit',
+	});
+	
+	const calendar_data_fetch = await new HTTPRequest("/api/v1/caldav/").get();
 	
 	if (!calendar_data_fetch || calendar_data_fetch.status !== 200) {
 		
-		console.error("Caldav server unreachable", err);
+		console.error("Caldav server unreachable");
 		const message = "Serveur Caldav injoignable.";
 		fillRentalList("#coming-rental-list", "", message);
 		fillRentalList("#past-rental-list", "", message);
@@ -700,6 +649,55 @@ async function displayRentalList() {
 
 	fillRentalList("#coming-rental-list", coming_dom, "Aucune location à venir.");
 	fillRentalList("#past-rental-list", past_dom, "Aucune location passée.");
+
+	function isValidDate(d) {
+		return d instanceof Date && !Number.isNaN(d.getTime());
+	}
+	
+	function formatRentalDate(date) {
+		return isValidDate(date) ? rentalDateFormatter.format(date) : 'Date inconnue';
+	}
+	
+	function isoAttr(date) {
+		return isValidDate(date) ? date.toISOString() : '';
+	}
+	
+	function renderRentalItem(event, status) {
+		const start = new Date(event.start);
+		const end = new Date(event.end);
+	
+		const badges = {
+			live: { label: 'En cours', modifier: 'rental-badge--live' },
+			upcoming: { label: 'À venir', modifier: 'rental-badge--upcoming' },
+			past: { label: 'Terminée', modifier: 'rental-badge--past' },
+		};
+		const badge = badges[status];
+	
+		const name = escapeHtml(event.name || 'Location sans intitulé');
+		const place = escapeHtml(event.location || 'Non renseigné');
+	
+		return `
+		<li class="rental-item rental-item--${status}">
+			<div class="rental-item-head">
+				<h4 class="rental-item-title">${name}</h4>
+				<span class="rental-badge ${badge.modifier}">${badge.label}</span>
+			</div>
+			<dl class="rental-item-meta">
+				<div class="rental-meta-row">
+					<dt>Lieu d'échange</dt>
+					<dd>${place}</dd>
+				</div>
+				<div class="rental-meta-row">
+					<dt>Début</dt>
+					<dd><time datetime="${isoAttr(start)}">${escapeHtml(formatRentalDate(start))}</time></dd>
+				</div>
+				<div class="rental-meta-row">
+					<dt>Fin</dt>
+					<dd><time datetime="${isoAttr(end)}">${escapeHtml(formatRentalDate(end))}</time></dd>
+				</div>
+			</dl>
+		</li>`;
+	}
 
 	function fillRentalList(selector, html, empty_message) {
 		const ul = document.querySelector(selector);
