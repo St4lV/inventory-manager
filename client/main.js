@@ -73,6 +73,7 @@ let condition_list = [];
 let address_list = [];
 let owner_list = [];
 let client_list = [];
+let calendar_events_list = [];
 let company_data = {};
 
 /* ===========================
@@ -156,9 +157,7 @@ function updateKPIs() {
 	document.getElementById("kpi-val-clients").textContent = client_list.length;
 	document.getElementById("kpi-val-avg-price").textContent = `${avg_price.toFixed(2)} €`;
 	document.getElementById("kpi-val-vat").textContent = `${vat_pct} %`;
-	document.getElementById("kpi-val-last-purchase").textContent = last_date
-		? last_date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
-		: '—';
+	document.getElementById("kpi-val-last-purchase").textContent = last_date ? last_date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
 }
 
 /* ===========================
@@ -257,6 +256,14 @@ function displayZoomableTimeseries() {
 			shared: false,
 			y: { formatter: (val) => `${val.toFixed(2)} €` },
 		},
+		responsive: [{
+			breakpoint: 600,
+			options: {
+				chart: { height: 280, toolbar: { show: false }, zoom: { enabled: false } },
+				yaxis: { title: { text: '' }, labels: { style: { fontSize: '10px' } } },
+				xaxis: { labels: { style: { fontSize: '10px' } } },
+			},
+		}],
 	};
 
 	new ApexCharts(document.querySelector('#timeseries-stock'), options).render();
@@ -319,6 +326,15 @@ function displayTopItemsBar() {
 			theme: 'dark',
 			y: { formatter: (val) => `${val.toFixed(2)} €` },
 		},
+		responsive: [{
+			breakpoint: 600,
+			options: {
+				chart: { height: Math.max(260, sorted.length * 38) },
+				yaxis: { labels: { style: { fontSize: '10px' }, maxWidth: 90 } },
+				dataLabels: { style: { fontSize: '10px' }, offsetX: 2 },
+				plotOptions: { bar: { barHeight: '72%' } },
+			},
+		}],
 	};
 
 	new ApexCharts(document.querySelector('#bar-top-items'), options).render();
@@ -393,6 +409,18 @@ function displayMonthlyBar() {
 			shared: true,
 			intersect: false,
 		},
+		responsive: [{
+			breakpoint: 600,
+			options: {
+				chart: { height: 300 },
+				xaxis: { labels: { style: { fontSize: '9px' }, rotate: -60, hideOverlappingLabels: true } },
+				yaxis: [
+					{ title: { text: '' }, labels: { style: { fontSize: '10px' } } },
+					{ opposite: true, title: { text: '' }, labels: { style: { fontSize: '10px' } } },
+				],
+				legend: { fontSize: '11px', itemMargin: { horizontal: 6 } },
+			},
+		}],
 	};
 
 	new ApexCharts(document.querySelector('#bar-monthly'), options).render();
@@ -451,6 +479,14 @@ function displayValueByLocation() {
 			theme: 'dark',
 			y: { formatter: (val) => `${val.toFixed(2)} €` },
 		},
+		responsive: [{
+			breakpoint: 600,
+			options: {
+				chart: { height: Math.max(220, sorted.length * 38) },
+				yaxis: { labels: { style: { fontSize: '10px' }, maxWidth: 90 } },
+				dataLabels: { style: { fontSize: '10px' }, offsetX: 2 },
+			},
+		}],
 	};
 
 	new ApexCharts(document.querySelector('#bar-value-location'), options).render();
@@ -482,14 +518,14 @@ function displayRecentTable() {
 		const owner = s.owner_data ? s.owner_data.label : '—';
 
 		dom += `<tr>
-			<td class="cell-date">${escapeHtml(date)}</td>
-			<td class="cell-article" title="${escapeHtml(article)}">${escapeHtml(article)}</td>
-			<td class="cell-lot">${escapeHtml(s.label)}</td>
-			<td class="cell-num">${s.count}</td>
-			<td class="cell-num">${s.purchase_price.toFixed(2)} €</td>
-			<td class="cell-total">${total} €</td>
-			<td class="cell-location">${escapeHtml(location)}</td>
-			<td class="cell-owner">${escapeHtml(owner)}</td>
+			<td class="cell-date" data-label="Date">${escapeHtml(date)}</td>
+			<td class="cell-article" data-label="Article" title="${escapeHtml(article)}">${escapeHtml(article)}</td>
+			<td class="cell-lot" data-label="Lot">${escapeHtml(s.label)}</td>
+			<td class="cell-num" data-label="Qté">${s.count}</td>
+			<td class="cell-num" data-label="Prix unit.">${s.purchase_price.toFixed(2)} €</td>
+			<td class="cell-total" data-label="Total">${total} €</td>
+			<td class="cell-location" data-label="Emplacement">${escapeHtml(location)}</td>
+			<td class="cell-owner" data-label="Propriétaire">${escapeHtml(owner)}</td>
 		</tr>`;
 	}
 	tbody.innerHTML = dom;
@@ -568,6 +604,111 @@ function displayGraphDonut(list = [], filter_param = "", tag_id = "", colors = [
 }
 
 /* ===========================
+   Liste des locations
+   =========================== */
+const rentalDateFormatter = new Intl.DateTimeFormat('fr-FR', {
+	day: 'numeric', month: 'long', year: 'numeric',
+	hour: '2-digit', minute: '2-digit',
+});
+
+function isValidDate(d) {
+	return d instanceof Date && !Number.isNaN(d.getTime());
+}
+
+function formatRentalDate(date) {
+	return isValidDate(date) ? rentalDateFormatter.format(date) : 'Date inconnue';
+}
+
+function isoAttr(date) {
+	return isValidDate(date) ? date.toISOString() : '';
+}
+
+/**
+ * Rendu unifié d'une location : même gabarit pour les listes à venir et passées,
+ * seul l'état (badge + modificateur de classe) change.
+ */
+function renderRentalItem(event, status) {
+	const start = new Date(event.start);
+	const end = new Date(event.end);
+
+	const badges = {
+		live: { label: 'En cours', modifier: 'rental-badge--live' },
+		upcoming: { label: 'À venir', modifier: 'rental-badge--upcoming' },
+		past: { label: 'Terminée', modifier: 'rental-badge--past' },
+	};
+	const badge = badges[status];
+
+	const name = escapeHtml(event.name || 'Location sans intitulé');
+	const place = escapeHtml(event.location || 'Non renseigné');
+
+	return `
+	<li class="rental-item rental-item--${status}">
+		<div class="rental-item-head">
+			<h4 class="rental-item-title">${name}</h4>
+			<span class="rental-badge ${badge.modifier}">${badge.label}</span>
+		</div>
+		<dl class="rental-item-meta">
+			<div class="rental-meta-row">
+				<dt>Lieu d'échange</dt>
+				<dd>${place}</dd>
+			</div>
+			<div class="rental-meta-row">
+				<dt>Début</dt>
+				<dd><time datetime="${isoAttr(start)}">${escapeHtml(formatRentalDate(start))}</time></dd>
+			</div>
+			<div class="rental-meta-row">
+				<dt>Fin</dt>
+				<dd><time datetime="${isoAttr(end)}">${escapeHtml(formatRentalDate(end))}</time></dd>
+			</div>
+		</dl>
+	</li>`;
+}
+
+async function displayRentalList() {
+	const calendar_data_fetch = await new HTTPRequest("/api/v1/caldav").get();
+	
+	if (!calendar_data_fetch || calendar_data_fetch.status !== 200) {
+		
+		console.error("Caldav server unreachable", err);
+		const message = "Serveur Caldav injoignable.";
+		fillRentalList("#coming-rental-list", "", message);
+		fillRentalList("#past-rental-list", "", message);
+		return;
+	}
+
+	calendar_events_list = Array.isArray(calendar_data_fetch.data) ? calendar_data_fetch.data : [];
+
+	const now = Date.now();
+	const coming = [];
+	const past = [];
+
+	for (const event of calendar_events_list) {
+		const end = new Date(event.end);
+		if (isValidDate(end) && end.getTime() < now) past.push(event);
+		else coming.push(event);
+	}
+
+	coming.sort((a, b) => new Date(a.start) - new Date(b.start));
+	past.sort((a, b) => new Date(b.end) - new Date(a.end));
+
+	const coming_dom = coming
+		.map(e => renderRentalItem(e, new Date(e.start).getTime() <= now ? 'live' : 'upcoming'))
+		.join('');
+	const past_dom = past
+		.map(e => renderRentalItem(e, 'past'))
+		.join('');
+
+	fillRentalList("#coming-rental-list", coming_dom, "Aucune location à venir.");
+	fillRentalList("#past-rental-list", past_dom, "Aucune location passée.");
+
+	function fillRentalList(selector, html, empty_message) {
+		const ul = document.querySelector(selector);
+		if (!ul) return;
+		ul.innerHTML = html || `<li class="rental-empty">${escapeHtml(empty_message)}</li>`;
+	}
+}
+
+/* ===========================
    Orchestration
    =========================== */
 async function displayElements() {
@@ -581,8 +722,8 @@ async function displayElements() {
 	displayGraphDonut(countSplitterDonut(stock_list), "location_data.label", "#donut2");
 	displayGraphDonut(countSplitterDonut(stock_list), "condition_data.label", "#donut3", ["#34d399", "#fbbf24", "#f97316", "#ef4444", "#3b82f6"]);
 	displayGraphDonut(countSplitterDonut(stock_list), "owner_data.label", "#donut4");
-	
 	await displayFooterData();
+	await displayRentalList();
 }
 
 async function displayFooterData() {

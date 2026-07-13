@@ -2,7 +2,6 @@ const { Router } = require("express");
 const router = Router();
 
 const Client = require("../../../express_utils/classes/Client");
-const Calendar = require("../../../express_utils/classes/Calendar");
 
 router.get("/", async (req, res) => {
 	const client = new Client()

@@ -71,7 +71,7 @@ class Calendar {
 			}
 		});
 
-		events_list.sort((a, b) => new Date(a.start) - new Date(b.start));
+		events_list.sort((a, b) => new Date(b.start) - new Date(a.start));
 
 		return { code: 200, data: events_list };
     }
@@ -104,7 +104,7 @@ class Calendar {
 				allDay: event.allDay || false,
 			}
 
-			this.event = vals; // now `this` correctly refers to the Calendar instance
+			this.event = vals;
 
 			cal.createEvent(vals);
 	
@@ -129,9 +129,6 @@ class Calendar {
             log.error(error);
             return { code: 400, data: error };
         }
-
-		// changed from `function calDavEventBuilder(event) {...}` to an arrow function
-		
     }
 
 	async _findEventObject(selected_calendar, uid) {

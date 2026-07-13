@@ -4,6 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="color-scheme" content="dark">
 	<title>Gestionnaire d'inventaire - Tableau de bord</title>
 	<link rel="stylesheet" href="/style.css">
 </head>
@@ -92,24 +93,26 @@
 				</div>
 			</section>
 
-			<!-- Chronologie pleine largeur -->
-			<section class="chart-card chart-card--wide" aria-labelledby="chart-timeseries-title">
-				<h2 class="chart-card-title" id="chart-timeseries-title">Évolution de la valeur</h2>
-				<div class="chart-container" id="timeseries-stock"></div>
+			<!-- Locations -->
+			<section class="chart-card chart-card--wide" aria-labelledby="rentals-title">
+				<h2 class="sr-only" id="rentals-title">Locations</h2>
+				<div class="rental-groups">
+					<div class="rental-group">
+						<h3 class="chart-card-title" id="coming-rental-title">Locations à venir</h3>
+						<ul class="rental-list" id="coming-rental-list" aria-labelledby="coming-rental-title">
+							<li class="rental-empty">Chargement des locations…</li>
+						</ul>
+					</div>
+					<div class="rental-group">
+						<h3 class="chart-card-title" id="past-rental-title">Locations passées</h3>
+						<ul class="rental-list" id="past-rental-list" aria-labelledby="past-rental-title">
+							<li class="rental-empty">Chargement des locations…</li>
+						</ul>
+					</div>
+				</div>
 			</section>
 
-			<!-- Ligne mixte : barres + tableau -->
-			<div class="split-row">
-				<section class="chart-card" aria-labelledby="chart-top-items-title">
-					<h2 class="chart-card-title" id="chart-top-items-title">Top articles par valeur</h2>
-					<div class="chart-container" id="bar-top-items"></div>
-				</section>
-				<section class="chart-card" aria-labelledby="chart-monthly-title">
-					<h2 class="chart-card-title" id="chart-monthly-title">Acquisitions par mois</h2>
-					<div class="chart-container" id="bar-monthly"></div>
-				</section>
-			</div>
-
+			
 			<!-- Dernières acquisitions -->
 			<section class="chart-card chart-card--wide" aria-labelledby="table-recent-title">
 				<h2 class="chart-card-title" id="table-recent-title">Dernières acquisitions</h2>
@@ -158,6 +161,23 @@
 				</section>
 			</div>
 
+			<!-- Chronologie pleine largeur -->
+			<section class="chart-card chart-card--wide" aria-labelledby="chart-timeseries-title">
+				<h2 class="chart-card-title" id="chart-timeseries-title">Évolution de la valeur</h2>
+				<div class="chart-container" id="timeseries-stock"></div>
+			</section>
+
+			<!-- Ligne mixte : barres + tableau -->
+			<div class="split-row">
+				<section class="chart-card" aria-labelledby="chart-top-items-title">
+					<h2 class="chart-card-title" id="chart-top-items-title">Top articles par valeur</h2>
+					<div class="chart-container" id="bar-top-items"></div>
+				</section>
+				<section class="chart-card" aria-labelledby="chart-monthly-title">
+					<h2 class="chart-card-title" id="chart-monthly-title">Acquisitions par mois</h2>
+					<div class="chart-container" id="bar-monthly"></div>
+				</section>
+			</div>
 		</div>
 	</main>
 	<footer>
