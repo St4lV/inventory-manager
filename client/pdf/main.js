@@ -277,7 +277,6 @@ function stockKey(s = {}) {
 	].join("||");
 }
 
-
 function formatPrix(val) {
 	const n = Number(val);
 	if (isNaN(n)) return "-";
@@ -453,7 +452,9 @@ let condition_list = [];
 let address_list   = [];
 let owner_list     = [];
 let client_list    = [];
+let calendar_events_list = [];
 let company_data   = {};
+let calendar_fetched = false;
 
 let datalist_map = new Map();
 let selected_stock_to_add = {};
@@ -563,22 +564,42 @@ async function bindActions() {
 			return;
 		}
 
-		if (confirm("Sauvegarder l'événement sur Nextcloud ?")) {
-			const address_span = document.querySelector("#pdf-doc-address");
-
-			const event_desc = act_pdf._stock_list.map((i) => `${i.label} x ${i.count}`).join('\n');
-			const event_client = client_list.find((c) => c.siren === sel_client.value);
-			
-			const sended_event = {
-				start: new Date(date_start.value),
-				end: new Date(date_end.value),
-				summary: `Location ${event_client.name} [${act_pdf._total_price}€]`,
-				description: event_desc,
-				location: address_span.innerText,
-				allDay: false,
-			}
-			
-			await new HTTPRequest("/api/v1/caldav").post({event:sended_event});
+		if (calendar_fetched){
+			if (confirm("Sauvegarder l'événement sur Nextcloud ?")) {
+				const address_span = document.querySelector("#pdf-doc-address");
+	
+				const event_desc = act_pdf._stock_list.map((i) => `${i.label} x ${i.count}`).join('\n');
+				const event_client = client_list.find((c) => c.siren === sel_client.value);
+				
+				const new_event = calDavEventBuilder(new Date(date_start.value),new Date(date_end.value),`Location ${event_client.name} [${act_pdf._total_price}]`,event_desc,address_span.innerText, false) 
+				new_event.start.toDateString()
+	
+				let event_exist = false;
+				let targeted_event = null;
+				for (let i of calendar_events_list){
+					if (new Date(i.start).toDateString() === new_event.start.toDateString() && new Date(i.end).toDateString() === new_event.end.toDateString() && i.name.split("[")[0].trim() === (`Location ${event_client.name}`).trim()){
+						event_exist = true;
+						targeted_event = calDavEventBuilder(i.start,i.end,i.name,i.description,i.location,false);
+					}
+				}
+				
+				if (event_exist){
+					await new HTTPRequest("/api/v1/caldav").put({event:targeted_event,new_event:new_event});
+				} else {
+					await new HTTPRequest("/api/v1/caldav").post({event:new_event});
+				}
+	
+				function calDavEventBuilder(start = new Date(), end = start = new Date(), summary = "", description = "", location = "", allDay = false){
+					return {
+						start: start,
+						end: end,
+						summary: summary,
+						description: description,
+						location: location,
+						allDay: allDay,
+					}
+				}
+			};
 		};
 
 		const pdf_doc = document.querySelector("#pdf-doc-container").innerHTML;
@@ -629,6 +650,17 @@ async function displayElements() {
 	initPDF();
 	product_input_search.value = "";
 	await displayFooterData();
+}
+
+async function fetchCalendar() {
+	const calendar_data_fetch = await new HTTPRequest("/api/v1/caldav/").get();
+	if (calendar_data_fetch.status !== 200){
+		console.error("Caldav server unreachable");
+		calendar_fetched = false;
+		return
+	}
+	calendar_events_list = calendar_data_fetch.data;
+	calendar_fetched= true;
 }
 
 function initPDF() {
@@ -736,4 +768,5 @@ function escapeHtml(str) {
 	await bindActions();
 	await displayElements();
 	restoreDraft();
+	await fetchCalendar();
 })();
