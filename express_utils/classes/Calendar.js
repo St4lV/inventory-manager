@@ -161,9 +161,27 @@ class Calendar {
             return { code: 404, data: `Calendar [${calendar_name}] not found.` };
         }
 
+        const events = await this._caldav_client.fetchCalendarObjects({
+            calendar: selected_calendar,
+        });
+		
+		if (!this.event.id){
+			events.forEach((e) => {
+				const objets = ical.sync.parseICS(e.data);
+				for (const cle in objets) {
+					const ev = objets[cle];
+					if (ev.type === 'VEVENT'){
+						if (new Date(ev.start).toDateString() === new Date(this.event.start).toDateString() && new Date(ev.end).toDateString() === new Date(this.event.end).toDateString() && ev.summary.trim() === this.event.summary.trim()){
+							this.event.id = ev.uid;
+						}
+					};
+				};
+			});
+		}
+
         const uid = this.event && this.event.id;
         if (!uid) {
-            return { code: 400, data: 'this.event.id is required to modify an event.' };
+            return { code: 400, data: 'Event uid is required to modify an event.' };
         }
 
         try {
