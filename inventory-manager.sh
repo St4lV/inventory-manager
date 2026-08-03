@@ -6,7 +6,7 @@ case "$1" in
 		mv .env .env.bak
         find . -type f ! -name "*.bak" -delete
         curl -L -o app.zip https://github.com/St4lV/inventory-manager/archive/refs/heads/main.zip
-        rm api express_utils client
+        rm -r api express_utils client
         unzip app.zip -d ../
         rm app.zip
         chmod +x inventory-manager.sh
