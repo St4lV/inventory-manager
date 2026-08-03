@@ -8,6 +8,12 @@ class PDFGenerator {
 
   #buildPage() {
 		const additional_css = `
+			* {
+				margin: 0px;
+				padding: 0px;
+				box-sizing: border-box;
+			}
+				
 			:root {
 				--color-text:       #1a1a1a;
 				--color-text-muted: #555555;
@@ -22,11 +28,6 @@ class PDFGenerator {
 				font-family: sans-serif;
 				font-size: 13px;
 				line-height: 1.7;
-			}
-
-			.contract-title {
-				margin-top : 0px;
-				padding-top: 0px;
 			}
 		`;
 
@@ -65,7 +66,7 @@ class PDFGenerator {
 		const buffer = await page.pdf({
 			format:          'A4',
 			printBackground: true,
-			margin: { top: '20mm', bottom: '20mm', left: '15mm', right: '15mm' },
+			margin: { top: '5mm', bottom: '10mm', left: '15mm', right: '15mm' },
 		});
 
 		return { code: 201, data: buffer };

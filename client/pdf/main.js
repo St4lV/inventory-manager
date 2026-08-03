@@ -116,10 +116,10 @@ class PDF_1 {
 		return `
 		<p class="party-role">${mode === "company" ? "LE LOUEUR" : "LE LOCATAIRE"}</p>
 		<p><span class="field-label">Raison sociale :</span><span class="field-value">${data.name}</span></p>
-		<p><span class="field-label">Adresse :</span><span class="field-value">${data.address}</span></p>
-		<p><span class="field-label">Téléphone :</span><span class="field-value">${data.tel}</span></p>
-		<p><span class="field-label">Courriel :</span><span class="field-value">${data.email}</span></p>
-		<p><span class="field-label">SIREN :</span><span class="field-value">${data.siren}</span></p>`;
+		<p><span class="field-label">Adresse :</span><span class="field-value"><a class="field-value" href="https://www.google.com/maps/place/${mapAppQueryFormatter(data.address)}" target="_blank">${data.address}</a></span></p>
+		<p><span class="field-label">Téléphone :</span><span class="field-value">${data.email === "Non renseigné" ? data.email : `<a class="field-value" href="tel:${data.tel}">${data.tel}</a target="_blank">`}</span></p>
+		<p><span class="field-label">Courriel :</span><span class="field-value">${data.email === "Non renseigné" ? data.email : `<a class="field-value" href="mailto:${data.email}">${data.email}</a target="_blank">`}</span></p>
+		<p><span class="field-label">SIREN :</span><span class="field-value"><a class="field-value" href="https://annuaire-entreprises.data.gouv.fr/rechercher?terme=${data.siren}" target="_blank">${data.siren}</a></span></p>`;
 	}
 
 	setAdress(address) {
@@ -290,6 +290,10 @@ function formatDateFr(val) {
 	const date = d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 	const heure = d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
 	return `${date.charAt(0).toUpperCase() + date.slice(1)} à ${heure}`;
+}
+
+function mapAppQueryFormatter(str){
+	return str.trim().replace("(","").replace(")","").replace(",","").split(" ").join("+");
 }
 
 function saveDraft() {

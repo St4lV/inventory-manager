@@ -220,6 +220,10 @@ async function displayElements() {
 	displayLocations();
 	displayTags();
 
+	function mapAppQueryFormatter(str){
+		return str.trim().replace("(","").replace(")","").replace(",","").split(" ").join("+");
+	}
+
 	function displayCompanyInfo() {
 		const c_name = document.querySelector("#app-settings-company-name");
 		const c_address = document.querySelector("#app-settings-company-address");
@@ -228,9 +232,9 @@ async function displayElements() {
 		const c_siren = document.querySelector("#app-settings-company-siren");
 
 		c_name.innerHTML= `<a href="https://annuaire-entreprises.data.gouv.fr/rechercher?terme=${company_data.siren}" target="_blank">${company_data.name}<a/>`;
-		c_address.innerText= company_data.address;
-		c_email.innerText= company_data.email;
-		c_tel.innerText= company_data.tel;
+		c_address.innerHTML= `<a href="https://www.google.com/maps/place/${mapAppQueryFormatter(company_data.address)}" target="_blank">${company_data.address}</a>`;
+		c_email.innerHTML= `<a href="mailto:${company_data.email}" target="_blank">${company_data.email}</a>`;
+		c_tel.innerHTML= `<a href="tel:${company_data.tel}" target="_blank">${company_data.tel}</a>`;
 		c_siren.innerText= company_data.siren;
 	}
 
@@ -238,14 +242,15 @@ async function displayElements() {
 		let dom = "";
 		const list_el = document.querySelector("#client-list");
 		for (let i of client_list){
+			console.log(mapAppQueryFormatter(i.address))
 			dom+=`<li class="entity-item">
 					<div class='edit-element-container'>
 					<h3><a href="https://annuaire-entreprises.data.gouv.fr/rechercher?terme=${i.siren}" target="_blank">${i.name}</a></h3>
 					<button type="button" class="settings-edit-btn edit-client-btn" data-client="${escapeHtml(JSON.stringify(i))}" aria-label="Ajouter un client">${svg.edit}</button>
 					</div>
-					<p class="entity-detail">${i.address}</p>
-					<p class="entity-detail">${i.tel}</p>
-					<p class="entity-detail">${i.email}</p>
+					<p><a href="https://www.google.com/maps/place/${mapAppQueryFormatter(i.address)}" target="_blank" class="entity-detail">${i.address}</a></p>
+					<p>${i.tel === "Non renseigné" ? `<span class="entity-detail">${i.tel}</span>` :`<a href="tel:${i.tel}" target="_blank" class="entity-detail">${i.tel}</a></p>`}
+					<p>${i.tel === "Non renseigné" ? `<span class="entity-detail">${i.email}</span>` :`<a href="mailto:${i.email}" target="_blank" class="entity-detail">${i.email}</a>`}</p>
 					<p class="entity-detail entity-siren">${i.siren}</p>
 				</li>`
 		}
@@ -286,7 +291,7 @@ async function displayElements() {
 					<h3>${i.label}</h3>
 					<button type="button" class="settings-edit-btn edit-location-btn" data-location="${escapeHtml(JSON.stringify(i))}" aria-label="Ajouter un client">${svg.edit}</button>
 				</div>
-				<p class="entity-detail">${i.address}</p>
+				<p><a href="https://www.google.com/maps/place/${mapAppQueryFormatter(i.address)}" target="_blank" class="entity-detail">${i.address}</a></p>
 			</li>`
 		}
 		list_el.innerHTML=dom;
