@@ -1,38 +1,38 @@
 #!/bin/bash
 
 # ---- Configuration OSRM ----
-OSRM_REGION="idf-elargie"
+OSRM_REGION="france-latest"
 OSRM_DATA_DIR="./osrm-data"
 OSRM_TMP_DIR="./osrm-data.tmp"
 OSRM_PBF_URL="https://download.geofabrik.de/europe/france-latest.osm.pbf"
-OSRM_BBOX="0.6,47.9,4.2,50.2"   # min_lon,min_lat,max_lon,max_lat (IDF + départements voisins)
 OSRM_IMAGE="ghcr.io/project-osrm/osrm-backend:latest"
-OSMIUM_IMAGE="osmium/osmium-tool"
 OSRM_COMPOSE_SERVICE="osrm"
 
 osrm_update() {
-    echo "Updating OSRM ($OSRM_REGION)..."
+    echo "Mise à jour des données OSRM ($OSRM_REGION)..."
     set -e
 
     rm -rf "$OSRM_TMP_DIR"
     mkdir -p "$OSRM_TMP_DIR"
-    curl -L --fail -o "$OSRM_TMP_DIR/france-latest.osm.pbf" "$OSRM_PBF_URL"
 
-    docker run --rm -v "$(pwd)/$OSRM_TMP_DIR:/data" "$OSMIUM_IMAGE" \
-        osmium extract -b "$OSRM_BBOX" "/data/france-latest.osm.pbf" -o "/data/$OSRM_REGION.osm.pbf"
-    rm -f "$OSRM_TMP_DIR/france-latest.osm.pbf"
+    echo "Téléchargement de l'extrait France..."
+    curl -L --fail -o "$OSRM_TMP_DIR/$OSRM_REGION.osm.pbf" "$OSRM_PBF_URL"
 
+    echo "Extraction du graphe routier..."
     docker run --rm -v "$(pwd)/$OSRM_TMP_DIR:/data" "$OSRM_IMAGE" \
         osrm-extract -p /opt/car.lua "/data/$OSRM_REGION.osm.pbf"
 
+    echo "Partitionnement (MLD)..."
     docker run --rm -v "$(pwd)/$OSRM_TMP_DIR:/data" "$OSRM_IMAGE" \
         osrm-partition "/data/$OSRM_REGION.osrm"
 
+    echo "Customisation..."
     docker run --rm -v "$(pwd)/$OSRM_TMP_DIR:/data" "$OSRM_IMAGE" \
         osrm-customize "/data/$OSRM_REGION.osrm"
 
     rm -f "$OSRM_TMP_DIR/$OSRM_REGION.osm.pbf"
 
+    echo "Bascule des données OSRM..."
     docker compose stop "$OSRM_COMPOSE_SERVICE" 2>/dev/null || true
 
     if [ -d "$OSRM_DATA_DIR" ]; then
@@ -45,7 +45,7 @@ osrm_update() {
     rm -rf "${OSRM_DATA_DIR}.old"
 
     set +e
-    echo "Done."
+    echo "Données OSRM à jour."
 }
 
 case "$1" in
