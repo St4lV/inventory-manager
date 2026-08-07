@@ -13,7 +13,7 @@ services:
   osrm:
     image: "ghcr.io/project-osrm/osrm-backend:latest"
     container_name: "inventory-manager-osrm"
-    command: osrm-routed --algorithm mld /data/idf-elargie.osrm
+    command: osrm-routed --algorithm mld /data/france-latest.osrm
     volumes:
       - ./osrm-data:/data
     ports:
