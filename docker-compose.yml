@@ -9,3 +9,13 @@ services:
       - "3000:3000"
     env_file: .env
     restart: unless-stopped
+
+  osrm:
+    image: "osrm/osrm-backend:26-8"
+    container_name: "inventory-manager-osrm"
+    command: osrm-routed --algorithm mld /data/idf-elargie.osrm
+    volumes:
+      - ./osrm-data:/data
+    ports:
+      - "3001:5000"
+    restart: unless-stopped
