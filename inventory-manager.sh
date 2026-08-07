@@ -6,7 +6,7 @@ OSRM_DATA_DIR="./osrm-data"
 OSRM_TMP_DIR="./osrm-data.tmp"
 OSRM_PBF_URL="https://download.geofabrik.de/europe/france-latest.osm.pbf"
 OSRM_BBOX="0.6,47.9,4.2,50.2"   # min_lon,min_lat,max_lon,max_lat (IDF + départements voisins)
-OSRM_IMAGE="osrm/osrm-backend:26-8"
+OSRM_IMAGE="ghcr.io/project-osrm/osrm-backend:latest"
 OSMIUM_IMAGE="osmium/osmium-tool"
 OSRM_COMPOSE_SERVICE="osrm"
 
