@@ -2,7 +2,7 @@ FROM node:slim
 WORKDIR /express
 COPY . .
 
-RUN nom ci
+RUN npm ci
 RUN npx playwright install --with-deps chromium
 
 ENV PORT=3000
