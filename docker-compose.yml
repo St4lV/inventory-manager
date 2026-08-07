@@ -11,7 +11,7 @@ services:
     restart: unless-stopped
 
   osrm:
-    image: "osrm/osrm-backend:26-8"
+    image: "osrm/osrm-backend:26.8-assertions-debian"
     container_name: "inventory-manager-osrm"
     command: osrm-routed --algorithm mld /data/idf-elargie.osrm
     volumes:
