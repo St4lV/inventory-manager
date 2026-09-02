@@ -119,7 +119,8 @@ class PDF_1 {
 		<p><span class="field-label">Adresse :</span><span class="field-value"><a class="field-value" href="https://www.google.com/maps/place/${mapAppQueryFormatter(data.address)}" target="_blank">${data.address}</a></span></p>
 		<p><span class="field-label">Téléphone :</span><span class="field-value">${data.email === "Non renseigné" ? data.email : `<a class="field-value" href="tel:${data.tel}">${data.tel}</a target="_blank">`}</span></p>
 		<p><span class="field-label">Courriel :</span><span class="field-value">${data.email === "Non renseigné" ? data.email : `<a class="field-value" href="mailto:${data.email}">${data.email}</a target="_blank">`}</span></p>
-		<p><span class="field-label">SIREN :</span><span class="field-value"><a class="field-value" href="https://annuaire-entreprises.data.gouv.fr/rechercher?terme=${data.siren}" target="_blank">${data.siren}</a></span></p>`;
+		${data.siren === "particulier" ? "" : `
+			<p><span class="field-label">SIREN :</span><span class="field-value"><a class="field-value" href="https://annuaire-entreprises.data.gouv.fr/rechercher?terme=${data.siren}" target="_blank">${data.siren}</a></span></p>`}`;
 	}
 
 	setAdress(address) {
