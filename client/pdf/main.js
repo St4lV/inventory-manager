@@ -188,7 +188,7 @@ class PDF_1 {
 			} else {
 				lots_empty.style.display="none"
 			}
-			const total = this._stock_list.reduce((sum, i) => sum + (Number(i.rental_price) || 0), 0);
+			const total = this._stock_list.reduce((sum, i) => sum + (Number(i.rental_price*i.count) || 0), 0);
 			const totalFormate = formatPrix(total * (rental_time / 24).toFixed(0));
 			this._total_price = totalFormate;
 
@@ -206,7 +206,8 @@ class PDF_1 {
 			let annexe_2_dom = "";
 
 			this._stock_list.forEach((i, idx) => {
-				const prix = formatPrix(i.rental_price);
+				console.log(i.rental_price*i.count)
+				const prix = formatPrix(i.rental_price*i.count);
 
 				const max = parseInt(i.available_count ?? i.count ?? 1);
 				const value = parseInt(i.count ?? max);
